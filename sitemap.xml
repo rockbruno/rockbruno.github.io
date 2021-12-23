@@ -15,6 +15,16 @@
     <priority>0.80</priority>
 </url>
 <url>
+    <loc>https://rockbruno.com/how-to-solve-any-crash</loc>
+    <lastmod>2022-01-03T14:00:00+02:00</lastmod>
+    <priority>0.80</priority>
+</url>
+<url>
+    <loc>https://rockbruno.com/how-to-solve-any-crash.html</loc>
+    <lastmod>2022-01-03T14:00:00+02:00</lastmod>
+    <priority>0.80</priority>
+</url>
+<url>
     <loc>https://rockbruno.com/projects</loc>
     <lastmod>2022-01-03T14:00:00+02:00</lastmod>
     <priority>0.80</priority>
@@ -32,6 +42,56 @@
 <url>
     <loc>https://rockbruno.com/index.html</loc>
     <lastmod>2022-01-03T14:00:00+02:00</lastmod>
+    <priority>0.80</priority>
+</url>
+<url>
+    <loc>https://rockbruno.com/reverse-engineering-xcode-issue-crash-symbol</loc>
+    <lastmod>2021-08-31T14:00:00+02:00</lastmod>
+    <priority>0.80</priority>
+</url>
+<url>
+    <loc>https://rockbruno.com/reverse-engineering-xcode-issue-crash-symbol.html</loc>
+    <lastmod>2021-08-31T14:00:00+02:00</lastmod>
+    <priority>0.80</priority>
+</url>
+<url>
+    <loc>https://rockbruno.com/how-necessary-are-the-programming-fundamentals</loc>
+    <lastmod>2021-05-20T23:00:00+02:00</lastmod>
+    <priority>0.80</priority>
+</url>
+<url>
+    <loc>https://rockbruno.com/how-necessary-are-the-programming-fundamentals.html</loc>
+    <lastmod>2021-05-20T23:00:00+02:00</lastmod>
+    <priority>0.80</priority>
+</url>
+<url>
+    <loc>https://rockbruno.com/reverse-engineering-ios-facebook-messenger-chat</loc>
+    <lastmod>2020-04-12T14:00:00+02:00</lastmod>
+    <priority>0.80</priority>
+</url>
+<url>
+    <loc>https://rockbruno.com/reverse-engineering-ios-facebook-messenger-chat.html</loc>
+    <lastmod>2020-04-12T14:00:00+02:00</lastmod>
+    <priority>0.80</priority>
+</url>
+<url>
+    <loc>https://rockbruno.com/introsort-timsort-swifts-sorting-algorithm</loc>
+    <lastmod>2020-04-12T14:00:00+02:00</lastmod>
+    <priority>0.80</priority>
+</url>
+<url>
+    <loc>https://rockbruno.com/introsort-timsort-swifts-sorting-algorithm.html</loc>
+    <lastmod>2020-04-12T14:00:00+02:00</lastmod>
+    <priority>0.80</priority>
+</url>
+<url>
+    <loc>https://rockbruno.com/building-a-face-detecting-sentry-gun-with-urlsessionwebsockettask-coreml-swiftui-and-arduino</loc>
+    <lastmod>2020-04-12T14:00:00+02:00</lastmod>
+    <priority>0.80</priority>
+</url>
+<url>
+    <loc>https://rockbruno.com/building-a-face-detecting-sentry-gun-with-urlsessionwebsockettask-coreml-swiftui-and-arduino.html</loc>
+    <lastmod>2020-04-12T14:00:00+02:00</lastmod>
     <priority>0.80</priority>
 </url>
 </urlset>

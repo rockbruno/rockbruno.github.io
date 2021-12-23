@@ -6,4 +6,1288 @@
     <language>en-us</language>
     <copyright>2022 Bruno Rocha</copyright>
     <link>https://rockbruno.com</link>
-    <atom:link href="https://rockbruno.com/rss.xml" rel="self" type="application/rss+xml"/></channel></rss>
+    <atom:link href="https://rockbruno.com/rss.xml" rel="self" type="application/rss+xml"/><item>
+    <title>How To Solve Any Crash</title>
+    <link>https://rockbruno.com/how-to-solve-any-crash</link>
+    <guid>https://rockbruno.com/how-to-solve-any-crash</guid>
+    <pubDate>Mon, 1 Nov 2021 09:00:00 GMT-3</pubDate>
+<description><![CDATA[
+<!--WRITEIT_POST_NAME=How To Solve Any Crash-->
+<!--WRITEIT_POST_HTML_NAME=how-to-solve-any-crash-->
+
+<!--Add here the additional properties that you want each page to possess.-->
+<!--These properties can be used to change content in the template page or in the page itself as shown here.-->
+<!--Properties must start with 'WRITEIT_POST'.-->
+<!--Writeit provides and injects WRITEIT_POST_NAME and WRITEIT_POST_HTML_NAME by default.-->
+
+<!--WRITEIT_POST_SHORT_DESCRIPTION=Ever had a crash in which you had absolutely no idea what was going on, and no amount of testing allowed you to reproduce the issue? If so, you've come to the right place!-->
+
+<!--DateFormat example: 2021-11-02T14:00:00+02:00-->
+<!--WRITEIT_POST_SITEMAP_DATE_LAST_MOD=2022-01-03T14:00:00+02:00-->
+<!--WRITEIT_POST_SITEMAP_DATE=2021-11-01T14:00:00+02:00-->
+
+<title>How To Solve Any Crash</title>
+<div class="blog-post">
+  <div class="post-title-index">
+    <h1>How To Solve Any Crash</h1>
+  </div>  
+  <div class="post-info">
+    <div class="category category-software">Software Engineering</div>
+    <div class="post-info-text">Published on 01 Nov 2021</div>
+  </div>
+<p><i>(Note: This article was written with iOS development in mind, but the concepts apply to all frontend platforms.)</i>
+<p><i>Closed: Cannot Reproduce</i></p>
+<p>Ever had a crash in which you had absolutely no idea what was going on, and no amount of testing allowed you to reproduce the issue? If so, you've come to the right place!</p>
+<div class="sponsor-article-ad-auto hidden"></div>
+<p>Well, sort of. As you'll see in this article, the ability to debug complex crashes is not something immediate. Keep this out of your expectations: there's no magical instrument that you forgot to run that will give you the output you're expecting. When it comes to complex crashes, what we need to do instead is <i>prepare</i> our environment so that these issues are better understood when they arrive, making them more actionable. Let's see how to do that!</p>
+<h2>What are complex crashes?</h2>
+<p>One thing that I find helpful is to rationalize the issue. It's easy to look at a weird issue and just dismiss it as something magical that will never again, but that makes no sense. There's always a perfectly logical reason the issue happened (most likely your fault), and the more users are affected by it, the more likely it's that this is not a freak accident. So how come you might be looking right now at an issue that affects a high amount of users, and still you have no idea what's going on or how to reproduce it?</p>
+<p>In my experience, the inability to understand a crash will always boil down to <b>a lack of information</b>. The problem is <i>never</i> that the issue is "too complicated", <b>but that you don't have enough data.</b> Think about the weirdest crash you ever had to look at: wouldn't it be a lot less complicated if the crash report told you exactly what the issue was and how to solve it? It doesn't matter how bizarre a crash is, it's your ability to understand and reproduce the issue which dictates how likely it's to be solved.</p>
+<p>Thus, if you want to be able to solve any crash ever, you need to enhance the data that accompanies them. Let's take a look at a couple of ways do to that!</p>
+<h2>App-specific metadata</h2>
+<p>You might have noticed that crash platforms like Firebase will always include some useful pieces of device-related metadata on your crashes, such as the most common iOS version causing the crash, if the users were in foreground or background, if the devices are jailbroken, how much disk space each user had left when the crash happened, and so on. These are extremely useful, but are not nearly enough. What you truly need here is to include metadata of <b>your app</b> which helps you pinpoint what the user was doing at the moment of the crash. Some examples of things you should add are:</p>
+<ul>
+<li>The screen the user was looking at</li>
+<li>The "type" of the user, if applicable (free? premium? logged out?)</li>
+<li>The last action the user did (did they try to navigate somewhere?)</li>
+<li>Did the app finish launching correctly?</li>
+<li>Did the user receive a memory warning?</li>
+<li>Is the app shutting down?</li>
+<li>Does the user have an active internet connection?</li>
+<li>Which language is the user seeing?</li>
+</ul>
+<p>It's hard to provide a complete list given that this will be completely different from app to app, but what you need to do here is essentially assemble everything that you can think about your app that can make a difference in its execution and include it to your crash reports.</p>
+<p>You can add this information to Firebase through its SDK's key/value pairs API, but in order to see this information as percentages you will probably have to abstract Firebase under your own crash reporting backend.</p>
+<h2>Analytics</h2>
+<p>In addition to metadata, another critical component is to have a solid analytics infrastructure in your app. This is something that most apps might already include, though you might require some changes to make it useable for crash reporting purposes.</p>
+<p>The point here is that if you have a solid analytics implementation, you should be able to use it to replay a users steps to the crash. Thus, for this to happen, you need to make sure your analytics SDK is receiving as much information as possible regarding user interactions like:</p>
+<ul>
+<li>"User touched button X"</li>
+<li>"User saw banner Y"</li>
+<li>"User navigated to screen Z"</li>
+</ul>
+<p>For the replayability itself, most third-party SDKs nowadays include a "timeline" feature that shows you all the events sent by a particular user around a specific time.</p>
+<h2>Using this information to solve crashes</h2>
+<p>Finally, with your crashes receiving as much information as possible about the state of the app at the moment of the crash, you can now follow this step-by-step guide I made that should help you track down and solve the great majority of cases!</p>
+<h3>Check the crashed thread</h3>
+<p>If you're reading this guide it probably means that you already tried this and it didn't work, but it's good to mention anyway that for the huge majority of cases the answer lies directly in the crashed trace. By checking the path the code took, you may be able to locate and reproduce the issue.</p>
+<h3>Check the metadata for the crash</h3>
+<p>If the trace is vague, then looking at your added metadata may reveal the issue. When looking at the metadata, pay attention to values that are close to either 100% or 0%. This may reveal that the crash is tied to a very specific device or condition inside the app.</p>
+<h3>Check the background threads of the crash</h3>
+<p>If the metadata is <i>also</i> vague, then it may mean that the crashed code is not the problem itself, but more of an indirect consequence of a problem that happened asynchronously somewhere else. In this situation, you may be able to locate the issue by looking at what's happening in the other threads of the crash. Try grabbing many occurrences of the crash and compare their threads with each other. Do they all have something in common that you don't see in other issues? If so, that could be the cause of the problem.</p>
+<h3>Match the environment of the crashing users</h3>
+<p>If after deeply analyzing the trace and metadata you still can't figure out what's going on, it may be the case that the crash is tied to a specific device and/or AB test. If that's the case, then you should be able to reproduce the crash by matching the user's environment. Besides making sure to use the exact phone/OS version that the user experienced the crash on, make sure that you're also matching the user's AB testing flags (if your app has them).</p>
+<p>Regarding flags, one very useful thing to do is to compare the flags of a list of users with the issue against those of a list of users <b>without</b> the issue. If the issue is connected to a flag, then compiling a list of common flags in these groups will reveal which flag (or lack of, if the issue was caused by removing an experiment) is causing the problem.</p>
+<p>EDIT: <a href="https://twitter.com/daveverwer">Dave Verwer</a> also mentioned something important that I forgot to add -- make sure to also run the exact build of the app that the users are crashing on! It's not unlikely for the changes on your branch to affect the conditions for the crash, so always make sure you're on the exact commit the build was archived on. You can gain this ability by making your CI create a git tag every time it uploads a new build -- by naming the tag with the correspondent build number, you'll have the power to rollback to any release you've ever created.</p>
+<h3>Retrace the user's steps</h3>
+<p>If everything proved to be useless, you should be able to reproduce the issue by mimicking what the users are doing before the crash happens. This can sometimes be something absurdly specific like opening/closing the app a couple of times, turning it upside-down, opening a playlist and then throwing the device against a wall, and if that's the case, then you should be able to find these steps by looking at your analytics SDK's timeline for that user.</p>
+<p>It's important to note that it's possible that the conditions to trigger the issue can span <b>multiple</b> sessions, like an issue that involves content that was downloaded a couple of days ago. In cases like that, understanding the issue requires looking not only at the data of the session where the crash happened, but also of the sessions that came before it.</p>
+<h3>Instrument for thread / memory safety issues</h3>
+<p>If you <b>still</b> can't figure out what's happening, then you may be dealing with a non-deterministic issue caused by either thread safety issues such as race conditions or memory issues like heap corruption. There's unfortunately no easy way of figuring these out, and you'll need to have a deep understanding of the code to catch them. In iOS, the Zombies instrument and the thread/memory sanitizers can be of some help.</p>
+<p>The best thing you can do here is to prevent these from being possible to happen in the first place. If you're working with asynchronous code, always be 100% sure that your implementation is thread-safe for all its usage scenarios before merging it. While thread-related issues are very easy to introduce, they're extremely hard to debug. Choose to always be on the safer side to avoid issues like this in the future.</p>
+<h3>Check what was introduced in the release the crash started</h3>
+<p>In some cases, especially very old issues, it can be helpful to track down the exact version the issue started happening and hop into GitHub to see what exactly was introduced in that release. If nothing worked, then reverting suspicious pull requests could do the trick.</p>
+<h3>Add more logs</h3>
+<p>In the event that you have absolutely no clue what's happening, then adding additional logs could provide some relief. Firebase allows you to attach generic logs to a crash report, and one way you can use them is to log information about the state of the user's app around the place the crash happens. Try to think of anything weird or unintentional that can happen around the code that is crashing and log it to Firebase -- in the next release, you'll be able to see them alongside the crashes. They can also be useful even before you push a new feature; if you think a new feature could cause issues, you can already safeguard it with logs before it's even released. In the event that it does cause an issue, you'll already have the additional information you need to debug it.</p>
+<h3>What else?</h3>
+<p>If you reach this far, then it's possible for your initial thoughts might be true: you're dealing with some bizarre hardware problem caused by the sun's radiation at a specific time of the day for a specific user in Latvia.</p>
+<div class="sponsor-article-ad-auto hidden"></div>
+<p>To avoid situations like this, I personally try to completely avoid looking into issues until they are consistently happening for a sufficiently large amount of users. It's always possible for issues to be caused by situational things, but unless they are consistent or of high impact, it's probably best to ignore them to avoid the possibility of wasting your time looking into something that turns out to not be your fault.</p> 
+</div>
+]]></description>
+</item>
+<item>
+    <title>Reverse engineering a 5 year old Xcode issue</title>
+    <link>https://rockbruno.com/reverse-engineering-xcode-issue-crash-symbol</link>
+    <guid>https://rockbruno.com/reverse-engineering-xcode-issue-crash-symbol</guid>
+    <pubDate>Tue, 31 Aug 2021 09:00:00 GMT-3</pubDate>
+<description><![CDATA[
+<!--WRITEIT_POST_NAME=Reverse engineering a 5 year old Xcode issue-->
+<!--WRITEIT_POST_HTML_NAME=reverse-engineering-xcode-issue-crash-symbol-->
+
+<!--Add here the additional properties that you want each page to possess.-->
+<!--These properties can be used to change content in the template page or in the page itself as shown here.-->
+<!--Properties must start with 'WRITEIT_POST'.-->
+<!--Writeit provides and injects WRITEIT_POST_NAME and WRITEIT_POST_HTML_NAME by default.-->
+
+<!--WRITEIT_POST_SHORT_DESCRIPTION=Have you ever had issues with Xcode not symbolicating crashes? Me too, and I found the fix by reverse engineering the IDE.-->
+
+<!--DateFormat example: 2021-08-31T14:00:00+02:00-->
+<!--WRITEIT_POST_SITEMAP_DATE_LAST_MOD=2021-08-31T14:00:00+02:00-->
+<!--WRITEIT_POST_SITEMAP_DATE=2021-08-31T14:00:00+02:00-->
+
+<title>Reverse engineering a 5 year old Xcode issue</title>
+<div class="blog-post">
+  <div class="post-title-index">
+    <h1>Reverse engineering a 5 year old Xcode issue</h1>
+  </div>  
+  <div class="post-info">
+    <div class="category category-reverse">Reverse Engineering</div>
+    <div class="post-info-text">Published on 31 Aug 2021</div>
+  </div>
+<p>Xcode has a feature called <b>Organizer</b> that shows you important information about builds you sent to the App Store, with the most relevant ones being crashes and energy reports (for CPU/memory usage). In my experience, this feature will work perfectly fine if you pushed the build from your <i>own</i> machine, but if that's not true for any reason (the most common being because you're using a CI pipeline to do) then you might have a frustrating experience. To be specific, if you didn't push the build from your machine, then all reports provided by Xcode will be unsymbolicated:</p>
+<div class="post-image">
+  <img src="https://i.imgur.com/9UaPOZb.png" alt="Alt">                                    
+</div>
+<p>This is perfectly expected given that the symbol information comes from the <b>dSYM</b> package that is generated when you archive your app, so it's also normal for CI pipelines to store the dSYMs of a build somewhere that can be retrieved later. The problem is that <b>even</b> if you have a copy of the original build archive, chances are that Xcode will not know what to do. If you right-click a stack trace and press <i>Symbolicate</i>, you'll either get a useless error or nothing will happen.</p>
+<div class="sponsor-article-ad-auto hidden"></div>
+<p>This bug is not deterministic (some people have it, some people don't), and it's not clear at first glance what factors make it work or not. What I do know is that a <b>lot</b> of people have experienced this -- a Google search will reveal many StackOverflow and Apple Developer threads complaining about this issue, <a href="https://developer.apple.com/forums/thread/51873">with the earliest being 5 years old.</a> The threads point to many CLI alternatives that can be used to symbolicate crashes manually, but no one seems to be able to pinpoint exactly <i>why</i> Xcode doesn't work in the first place. As you might also expect, Apple has never said or done anything about this.</p>
+<p><i>"But wait a second Bruno, why do you care about this bug? Isn't everyone using Firebase for crash reporting?"</i></p>
+<p>That is true, but the Organizer contains more than just plain crashes. I was particularly interested in reading Xcode's <b>energy reports</b> to learn more about cases where iOS decides to shut down apps due to high CPU usage, which are not reported to Firebase.</p>
+<p>Additionally, even though there are many workarounds available to symbolicate crashes manually, <b>none of them work for the energy reports I wanted to look at.</b> The most common workaround shared by developers is to extract the <code>symbolicatecrash</code> file that exists inside Xcode and call it manually from the CLI, but this only works for regular crashes. To be specific, <code>symbolicatecrash</code> is in fact what Xcode uses to symbolicate energy reports, but because Xcode stores them in a different format, you're not able to pass them to <code>symbolicatecrash</code> without first somehow converting them, something of which I had no interest in doing as I had no idea what format this tool is looking for in the first place. To make it worse, because issues with CPU and memory usage tend to be rare in the iOS world, I couldn't find <i>any</i> workaround for this. I made an angry Twitter post, and sometime after that realized that if I want to see these logs then I should reverse engineer Xcode and fix this issue myself.</p>
+<h2>Finding the source of the error</h2>
+<p>The only piece of relevant information I had about this issue is the error that Xcode returns when attempting to symbolicate an energy report. Although the error is useless, it's customized enough to allow me to search for it inside the binary:</p>
+<div class="post-image">
+  <img src="https://i.imgur.com/NJJw17V.png" alt="Alt">                                    
+</div>
+<p>I then <code>grep</code>'d the entire Xcode archive for this string. It took a very long time for it to finish given that my Xcode is about 30 gigabytes in size, but it did find the reference inside the <code>IDEAnalyticsKit</code> framework:</p>
+<pre>
+Binary file .//PlugIns/IDEAnalyticsKit.framework/Versions/A/IDEAnalyticsKit matches
+Binary file .//PlugIns/IDEAnalyticsKit.framework/Versions/Current/IDEAnalyticsKit matches
+Binary file .//PlugIns/IDEAnalyticsKit.framework/IDEAnalyticsKit matches
+</pre>
+<p>Xcode is not one giant binary, but a collection of many smaller specialized frameworks. In fact, the main Xcode binary seems to do almost nothing but launch the other frameworks.</p>
+<p>After opening the <code>IDEAnalyticsKit</code> binary in Hopper, I was easily able to locate the Obj-C method that hardcoded the error string:</p>
+<div class="post-image">
+  <img src="https://i.imgur.com/iBbWFVR.png" alt="Alt">                                    
+</div>
+<p>Thanks to Hopper's amazing feature of converting assembly to pseudocode, navigating the decompiled binary is a breeze. By selecting the first instruction of a method, I could navigate the stack trace all the way to the method that is called when the <i>Symbolicate</i> button is touched:</p>
+<div class="post-image">
+  <img src="https://i.imgur.com/dKfpaEs.png" alt="Alt">                                    
+</div>
+<p>In short, what this method does is simply assert that we're in the main thread and then start the symbolization process by sending a completion handler that throws the error we're ending up in. By navigating the assembly code with the help of Hopper's pseudocode feature, we should be able to find out exactly what's causing it to fail.</p>
+<p>Following the symbolization trace eventually led me to <i>another</i> framework, <code>DVTAnalytics</code>, where a more specialized method lives:</p>
+<div class="post-image">
+  <img src="https://i.imgur.com/NqY13Jc.png" alt="Alt">                                    
+</div>
+<p>Despite being a long method, there's nothing special going on here -- Xcode is simply grabbing information about the crash and initializing more specialized objects as it travels from framework to framework. After setting up another completion handler, the journey continues inside <code>symbolicateWithCallback</code>.</p>
+<p>When I tried navigating to that method, Hopper greeted me with this awesome pop-up:</p>
+<div class="post-image">
+  <img src="https://i.imgur.com/YvwFOgN.png" alt="Alt">                                    
+</div>
+<p>It turns out that Hopper is smart enough to notice that <code>symbolicateWithCallback</code> is a Obj-C protocol method that is implemented by three different objects in this framework, which represent the three different types of crashes available in the Organizer (crash, energy report and disk report)! After picking the energy variant, I eventually fell here:</p>
+<div class="post-image">
+  <img src="https://i.imgur.com/w4z5zFq.png" alt="Alt">                                    
+</div>
+<p>This method is saying that we're initializing a <code>DVTLocalLogSymbolicator</code> object and asking it to continue the process, but I couldn't find it anywhere in this framework. After another <code>grep</code>, I found out that this and all the core symbolization logic was placed in a separate <code>DVTFoundation</code> framework. After locating the class and its <code>symbolicateLogData</code> method, I was finally able to locate where the symbolization is done:</p>
+<div class="post-image">
+  <img src="https://i.imgur.com/Fuw2J77.png" alt="Alt">                                    
+</div>
+<p>This is essentially saying that Xcode is fetching and calling the <code>symbolicatecrash</code> utility, which is not a surprise given that this is exactly the workaround that we mentioned in the beginning. However, I could immediately tell what the problem was -- when this workaround is suggested, the correct way of invoking this utility is by sending the dSYM that contains the symbols you're trying to translate:</p>
+<pre>
+<code>symbolicatecrash --dsym ./symbols.dSYM --output ./symbolicated.txt</code>
+</pre>
+<p>However, Xcode doesn't do that -- it just sets the output and hopes for the best. What happens essentially is that this tool is capable of searching for dSYMs on its own, but for some reason sometimes it just fails to do so. I could easily reproduce the issue by trying to symbolicate a regular crash without passing the dsym argument:</p>
+<pre>
+<code>Did not find dsym for (uuid)</code>
+</pre>
+<p>My first assumption was that this tool was probably looking for specific names or in specific folders, and we could confirm that by opening <code>symbolicatecrash</code> in Hopper and reverse engineering that logic. But quickly I realized that there was something fishy going on, because what I found instead was... nothing?</p>
+<div class="post-image">
+  <img src="https://i.imgur.com/RAdUFL8.png" alt="Alt">                                    
+</div>
+<p>After being stumped for a while, my colleague Åke quickly noticed that although macOS says that this file is a binary, it's actually just a really big perl script!</p>
+<pre>
+<code>#!/usr/bin/perl -w</code>
+<code>#</code>
+<code># This script parses a crashdump file and attempts to resolve addresses into function names.</code>
+<code>#</code>
+<code># It finds symbol-rich binaries by:</code>
+<code>#   a) searching in Spotlight to find .dSYM files by UUID, then finding the executable from there.</code>
+<code>#       That finds the symbols for binaries that a developer has built with "DWARF with dSYM File".</code>
+<code>#   b) searching in various SDK directories.</code>
+<code>#</code>
+<code># Copyright (c) 2008-2015 Apple Inc. All Rights Reserved.</code>
+<code>#</code>
+<code>#</code>
+</pre>
+<p>This made everything else easier, because we could now freely modify this script and test our changes without having to generate new binaries. The first thing we did was locate the part of the code that parsed the arguments, which was right in the beginning:</p>
+<pre>
+<code># read and parse command line</code>
+<code>my $opt_help = 0;</code>
+<code>my $opt_verbose = 0;</code>
+<code>my $opt_output = "-";</code>
+<code>my @opt_dsyms = ();</code>
+<code>my $opt_spotlight = 1;</code>
+</pre>
+<p>If we know that <code>symbolicatecrash</code> works by sending the dSYM manually, could we simply override the <code>opt_dsyms</code> param and fix the issue? The answer is <b>yes!</b></p>
+<div class="post-image">
+  <img src="https://i.imgur.com/uSdkNsU.png" alt="Alt">                                    
+</div>
+<p>This was sufficient for the data gathering we wanted to do, but I was still interested in knowing why this script couldn't find the dSYMs on its own. After a deeper inspection, we can see that the script attempts to locate the dSYM in three ways:</p>
+<ul>
+<li>The --dsym flag</li>
+<li>The /Volumes/Build/UUIDToSymbolMap folder</li>
+<li>The <code>Symbols</code> folder inside of every iOS/macOS SDK you have installed</li>
+</ul>
+<p>If neither of those returned a valid result, <b>it attempts to search the symbols through Spotlight, your macOS's search engine.</b> More specifically, it runs the following command:</p>
+<pre>
+<code>mdfind \"com_apple_xcode_dsym_uuids == $canonical_uuid\"</code>
+</pre>
+<p>This means that the failure to symbolicate crashes isn't a problem with Xcode, but that for some reason Spotlight failed to add the dSYM to its search index. After some quick searches about Spotlight issues, I found two ways to force Spotlight to re-index a folder:</p>
+<ul>
+<li>The <code>mdimport</code> CLI tool, pointing directly to where the dSYM is stored.</li>
+<li>This <a href="https://support.apple.com/en-us/HT201716">support article</a> from Apple</li>
+</ul>
+<div class="sponsor-article-ad-auto hidden"></div>
+<p>I had mixed success with <code>mdimport</code> (in fact, I remember seeing this as a buried comment in one of the StackOverflow posts, so someone <i>did</i> also figure this out in the past), but the trick from the article solved it for me. I think this feature would've been better developed if Xcode allowed you to provide the dSYM manually instead of completely relying on Spotlight, but investigating this issue was a very fun couple of hours for me.</p>
+</div>
+]]></description>
+</item>
+<item>
+    <title>How necessary are the programming fundamentals?</title>
+    <link>https://rockbruno.com/how-necessary-are-the-programming-fundamentals</link>
+    <guid>https://rockbruno.com/how-necessary-are-the-programming-fundamentals</guid>
+    <pubDate>Tue, 18 May 2021 09:00:00 GMT-3</pubDate>
+<description><![CDATA[
+ 
+  
+  <!--WRITEIT_POST_NAME=How necessary are the programming fundamentals?--> 
+  <!--WRITEIT_POST_HTML_NAME=how-necessary-are-the-programming-fundamentals--> 
+  <!--Add here the additional properties that you want each page to possess.--> 
+  <!--These properties can be used to change content in the template page or in the page itself as shown here.--> 
+  <!--Properties must start with 'WRITEIT_POST'.--> 
+  <!--Writeit provides and injects WRITEIT_POST_NAME and WRITEIT_POST_HTML_NAME by default.--> 
+  <!--WRITEIT_POST_SHORT_DESCRIPTION=In this article, we'll introduce the field of algorithms and data structures in a neutral way, show how this knowledge is applied in practice using an analogy, and finally use all of that to clarify why large companies like Google and Apple are so focused on it.--> 
+  <!--DateFormat example: 2021-05-18T14:00:00+02:00--> 
+  <!--WRITEIT_POST_SITEMAP_DATE_LAST_MOD=2021-05-20T23:00:00+02:00--> 
+  <!--WRITEIT_POST_SITEMAP_DATE=2021-05-18T14:00:00+02:00--> 
+  <title>How necessary are the programming fundamentals?</title> 
+ 
+
+<div class="blog-post"> 
+ <div class="post-title-index">  
+  <h1>How necessary are the programming fundamentals?</h1>
+ </div> 
+ <div class="post-info"> 
+<div class="category category-software">Software Engineering</div>
+  <div class="post-info-text">
+   Published on 18 May 2021 
+  </div> 
+ </div>   
+ <p>I've been meaning to write an article about computer science fundamentals and how it can improve a programmer's career for a long time, but I always had trouble finding a good way of introducing this topic. The reason I'd like to talk about this is first that, well, I really like this field and I feel that most of my programming ability today is a result of having studied this, but also because this topic has been a constant source of frustration for me, and I've been hoping I could address that.</p>
+ <div class="sponsor-article-ad-auto hidden"></div>
+ <p>The reason? There's a part of the tech community that absolutely <i>despises</i> this topic, especially when it shows up in interview processes. To be specific, this part of the community is <b>really</b> against the fact that large companies like Google and Apple base their interview processes around a person's knowledge of programming theory, to the point where they actively fight against this practice. This has since evolved in a way where mentioning theory at all in certain places is met with severe backlash, immediately turning it into a holy war.</p>
+ <p>What do I think about this? Well, I was actually one of these people at one point. I too had my share of bashing this practice, but as my career progressed and I started learning more about programming in general I started to realize that not only things weren't so black and white, but also that there was an important reason for them to be doing that. Today I think that people misunderstand the purpose of this field, especially on <b>why</b> these companies are choosing to give it importance.</p>
+ <p>Everyone is free to study and specialize in what they want, but I think we as a community should be really careful when we advocate that others should be <i>against</i> something. I honestly believe that these misunderstandings can hurt the careers of those who believe in them and limit what we can achieve as a tech community, and I would like to give you a different point of view as an attempt to give you the full picture and resolve this misunderstanding.</p>
+ <p>In this article, we'll introduce the field of algorithms and data structures, show how this knowledge is applied in practice using an analogy, and finally use all of that to clarify <b>why</b> large companies like Google and Apple are so focused on it. I hope that this will give you the tools to make your own conclusions about this topic, allowing you to not only understand why they do what they do but also to help you determine if this is something you should be studying to achieve your goals.</p>
+ <blockquote>
+  Before we continue, an important distinction must be made: 
+  <b>The purpose of this article is not to defend these companies' practices of applying difficult whiteboard puzzles in their interviews</b>, but to clarify 
+  <b>the concept of <i>why</i></b> they do so. Whether or not these companies are applying this concept efficiently however, especially when it comes to fairness and inclusion, is a separate issue that will not be touched here. Our objective is to focus solely on the 
+  <i>engineering aspect</i> of these interviews.
+ </blockquote>
+ <h2>What's the confusion about?</h2>
+ <p>The most common source of discussions and main source of misunderstandings is how the interview process of large tech companies like Google, Apple and Facebook work.</p>
+ <p>When regular-sized companies hire programmers, they usually look for people to perform a specific role at a specific platform (for example, iOS Developer). In this case, it's very common for the interview processes to focus on the <i>practical</i> aspects of these platforms, such as understanding how the platform works, the details of certain APIs, and the person's overall ability to work with that specific platform.</p>
+ <p>Larger companies, however, focus more on the <i>theory</i> of programming, asking questions not about what you can do in a specific platform, but about your understanding of the building blocks that allow such platforms to exist in the first place. This includes understanding the functionality of basic data structures like <code>Arrays</code> and <code>Sets</code>, your ability to predict, often in an academic fashion, the performance of your code, and your knowledge of fundamental algorithms like a binary search, often in the shape of a programming puzzle. The field that composes all of this knowledge can have multiple names, with the most common ones being <i>Algorithms and Data Structures</i> and <i>CS Fundamentals</i>.</p>
+ <p>When you study computer science at a more traditional college, these fundamentals are often introduced as the very introduction to programming. There, while you learn how to code, you will also be studying the fundamentals that will allow you to understand how computer science in general works, and instead of learning how to code for a specific platform, you'll often study programming from a <i>generic</i> and theoretical point of view that can be applied to any field you wish to specialize in the future.</p>
+ <p>At the same time, it's very common for people to learn programming through bootcamps and online courses. In these mediums, programming is often taught from a more practical perspective. Instead of learning the theory, you go straight to coding on a specific platform of your choice, learning the concepts of programming by seeing them work in practice. As we've seen above, because regular companies put more value on the practical aspects of programming, this is a perfectly fine learning path. In fact, this is how I got into programming!</p>
+ <p>When a person with the non-traditional background decides that it's time to apply at one of the world's main tech companies, the difference between covered topics in the interview process often catches them by surprise. Even though they have great practical programming experience, nothing they worked on could possibly answer the difficult theoretical content the companies are asking. After a very frustrating interview, the now disappointed person expresses their discomfort with the format and claims that a programmer doesn't need to know these things to perform their job. As I mentioned previously, I was this person at one point.</p>
+ <p>Here are some common complaint points from those who go through this experience:</p>
+ <ul> 
+  <li>The questions don't reflect what the person will actually do in their job.</li> 
+  <li>The questions are not indicative of the person's skill in the role being interviewed for. (the job is often for a specific platform, but the questions are almost always completely unrelated to it)</li> 
+  <li>The questions, in general, are pointless. Why does an iOS developer need to know how sorting functions work?</li> 
+ </ul>
+ <p>People who feel this way then claim that this field is something that only academics should worry about, and a practical programmer should not have to deal with this in a job interview.</p>
+ <p>I think anyone can see why someone would have these views. If you have never been introduced to this field, it can definitely look like it's all about pieces of obscure knowledge that aren't relevant to the actual role. They are called fundamentals, but you can learn how to code without them. Are they really that fundamental? Why do these companies care about them?</p>
+ <p>What these points misunderstand is <b>the role</b> this knowledge plays in your programming ability. Let's take a look at the third point again:</p>
+ <ul> 
+  <li>The questions, in general, are pointless. Why does an iOS developer need to know how sorting functions work?</li> 
+ </ul>
+ <p>Our first impression is to think that these companies are insinuating that you as a programmer need to know these things because that's what your job is going to be about, but that's just not how any of this works. Seriously, <b>nobody</b> is coding custom sorting functions in their apps. Stop thinking that's what the fundamentals are for!</p>
+ <p>In reality, people use what they know about these sorting functions as a <i>reference</i> to determine how a certain piece of code they're writing should be designed. If this sounds familiar to you, then it's because that's how most of programming works! This is certainly something you do all the time, the difference is just what you're using as a reference.</p>
+ <p>This implicitness gives people the impression that the fundamentals are useless, while in reality, they're using them all the time! They just probably never made the distinction between what part of their knowledge is platform-specific (like knowing UIKit APIs in iOS) and what is actually fundamental knowledge (like knowing the difference between an <code>Array</code> and a <code>Set</code>) that they picked up in practice. In short, even if you never studied CS Fundamentals, you as a professional programmer probably already know part of it, you just skipped the part where you learn how to describe them in a more generic fashion.</p>
+ <p>What about the other part though? Even though everyone can learn about things like <code>Arrays</code> in practice, the fundamentals often go much deeper than that. When would knowing the ultra-complicated details of something like an index tree ever be useful for a mobile developer?</p>
+ <h2>Analogy: Becoming a professional musician</h2>
+ <p>To explain this, I would like to draw an analogy with a person's journey of learning a musical instrument. This is because musical instruments are accompanied by <b>music theory</b>, and I find the relation between them to be very similar to the one between programming and algorithms.</p>
+ <blockquote>
+  <i>21-05-2021 Update</i>: I initially wrote this article comparing FAANG companies to accomplished rock bands, but actual musicians commented saying that a classical orchestra would be a better comparison. I updated the analogy -- thank you for your inputs!
+ </blockquote>
+ <p>In music, music theory is the study of the practices and possibilities of music. It seeks to define the processes and general principles of music, but also the concepts that define what <i>music</i> itself is, defining exactly what is a note, the theoretical definition of a chord and how it can be manipulated, how chords can be grouped into keys and how musical progression works.</p>
+ <p>A person who wants to learn an instrument like the electric guitar and is doing music lessons will be introduced to the concept of music theory, but also be told that they don't really <i>need</i> to learn it to learn how to play the guitar. Although they will need to learn the basics of notes and chords, there's no need to get into the deeper complicated details unless the person happens to be interested in that. The learner will be perfectly capable to learn how to play their favorite songs, and maybe even play in a cover band with their friends. As we've seen above, this is exactly the same scenario we see in programming.</p>
+ <p>In the case of music, the details of music theory start becoming more relevant when the person starts wanting to compose <b>their own songs</b>. Although not an impossible task, if the person doesn't understand the theory, it's likely that these songs are going to be flawed in a way or two. As this person doesn't know chord theory, they will probably have a really hard time figuring out the correct way of achieving sounds that they have never played before -- assuming that they can even determine which sounds they should use. That person is perfectly capable of playing the chords and songs composed by <i>other people</i>, but if they never studied the theory of how that works, they will be hindered when trying to compose their own material. To make it worse, musical progression is not a thing you just come up with -- there are multiple reasons why your favorite songs are your favorite songs, and the concepts that make a song sound pleasant are explained in great detail in music theory. We can say that composing songs is the more <i>explicit</i> application of music theory, which could be comparable to a programmer actually being tasked to code a complicated algorithm.</p>
+ <p>However, music theory has also an <b>implicit</b> application, which is that <b>people who learn music theory are great musicians in general.</b> Even though the person might not be composing their own songs, their understanding of music likely makes them very comfortable playing and improvising any kind of song. These people are usually extremely skilled, being able to learn how to play new songs by ear without ever needing to check how the band that made the song actually plays it. The logic is simple: <b>they don't need to, because they know what they're doing.</b></p>
+ <p>Another implicit benefit of music theory is that <b>it applies to every instrument.</b> People who understand music theory usually have a very easy time mastering different instruments because most of what they know also applies to this new instrument. All they need to learn is how the instrument is played.</p>
+ <p>These are exactly the benefits that learning CS Fundamentals provide you in everyday programming. Even though you're not "composing your own algorithms", your knowledge of how computer science works provides a serious boost to your programming ability in general. The difference between music and programming is what exactly is "boosted": While a musician that knows the theory will be better at designing and understanding music, a programmer who knows the theory will be better at designing and understanding <b>systems</b>. A person who doesn't know programming theory is perfectly capable of creating a good product from the user point of view, but it's likely that they will be severely hindered from a <i>system design</i> point of view.</p>
+ <p>It's important to understand however what it's <i>meant</i> by system design in this case; We are not talking about concepts like clean code and SOLID, but how <b>correct</b> your code is from a design, performance and resource management point of view. Note that <i>correct</i> doesn't mean "this code must use this ultra-fast obscure algorithm a Russian man published in 1970, otherwise it's wrong", it simply means that the code you're writing <b>makes sense</b> from an engineering standpoint. I'm gonna say it again: Stop thinking that the fundamentals are only about coding obscure algorithms!</p>
+ <p>If this doesn't click for you, think how correctness applies in the musician's example: Even though two musicians might be playing the exact same song, one of them might have really bad posture and a choice of chords that is all over the fretboard. The other musician however has learned the proper posture, and their knowledge of theory allows them to find the exact same chords in much more comfortable positions. It's the same song with the same result, but one of the musicians will have a much easier time playing it, while the other one will struggle and likely end up with tendonitis.</p>
+ <h2>Who <i>really</i> needs to learn the theory?</h2>
+ <p>I hope that by now you have a clear view of how a programmer can benefit from studying the fundamentals, but before clarifying why companies like Google actually require them in their interviews, let's first evaluate this knowledge from a <b>career necessity</b> standpoint.</p>
+ <p>If we go back to the music example, we can say that the <i>necessity</i> of studying music theory in a musician's career will heavily depend on what the musician wishes to achieve:</p>
+ <ul> 
+  <li>Do I want to learn it as a hobby, and never go beyond playing in my couch for fun?</li> 
+  <li>Do I want to play in a band, and solidify myself as a musical artist?</li> 
+  <li>Do I aspire to go beyond the mere title of a "musical artist" by living and breathing classical music, becoming an integral part of the Vienna Philharmonic, traveling the world, and going down as a legend that literally shaped the concept of music itself?</li> 
+ </ul>
+ <p>It should be clear that our non-orchestra-dreamer-fanatics don't need music theory, as they can definitely achieve everything they want without it. They can still benefit from it if they want -- learning it would allow them to master their instrument, as well as open the door to every other musical instrument. However, from a pure <i>career necessity</i> standpoint, we can safely say that the theory is just a bonus thing they could learn to be a better musician.</p>
+ <p>The dreamer, however, has a completely different objective. This person is not looking to simply have fun, they want to be part of a group of people who dedicate their entire lives to perfecting music as an art form. A famous orchestra will obviously not accept some random joe who picked up a violin weeks ago -- you must at very least be exceptionally good and versatile as a musician. Even though some professional musicians might argue that even in this case it's technically possible for the person to achieve this goal without formally studying the theory, it's clear that not having a deeper level of knowledge about music would be a major setback in this person's career. In fact, orchestras are so serious that having formally studied music is often a minimum requirement.</p>
+ <p>Just like in this analogy, the necessity of studying algorithms in your career depends on what you as a programmer want to achieve. If you learned programming as a hobby and don't really want to work with it, then the fundamentals are not necessary at all. Similarly, if you see yourself working at a regular and more practical company, then it's also likely that you will never face a situation where the fundamentals would make a big difference. You could learn it to improve your ability in general, but from a pure <i>necessity</i> standpoint, you can surely live without them.</p>
+ <p>However, if you aspire to learn multiple platforms, work in a global tech company with amazing salaries and perks, working with incredibly smart people who are at the top of their field helping them <i>literally</i> define what tech is, then it should be clear that even though it's technically possible for you to land this job with 100% practical experience, you as a programmer would seriously benefit from having a deeper level of understanding of the field.</p>
+ <h2>Why are the top-tier companies so focused on the fundamentals?</h2>
+ <p>To understand why larger companies are so obsessed with the theory, we'll focus on one of the other points:</p>
+ <ul> 
+  <li>The questions don't reflect what the person will actually do in their job.</li> 
+ </ul>
+ <p>I actually agree with this point, because these companies really do a bad job with their questions. However, what's incorrect with this point is that it misses an important detail of how these companies operate -- a common misunderstanding that we should probably be blaming bad job descriptions for.</p>
+ <p>While in regular companies you are likely to be hired to perform a very specific role as a specialist, larger companies like Google are almost always focused on engineering T-shapedness and generalism. This means that even though you might be hired to do something specific like iOS development, it's still expected that you the ability to work with different platforms if needed. I work in one of these companies -- even though I work primarily with iOS, there were many cases where a task I was doing involved checking code that was outside of iOS, like a relevant piece of Android code, the functionality of a C++ library, or even writing a new data pipeline inside our backend. This is expected, and as a generalist myself, this is something that I personally really enjoy doing.</p>
+ <p>I'd say that the reason why this happens is the nature of these companies -- while a regular company is trying to solve a small scale problem that has likely been done before, top-tier companies have to deal with enormous problems that nobody has ever faced, which often requires them to be masters in multiple platforms. It's not interesting for a company like Google to hire someone who dedicated their life to understand all about UIKit in iOS -- their problem is not that they don't know which UIKit APIs to use, is that the APIs they need <b>don't exist at all</b>. These problems are not solved by a person's platform knowledge, but by their understanding of computer science and their ability to craft new and efficient solutions.</p>
+ <p>Just like how music theory applies to all instruments, the fundamentals apply to all platforms. A reason why these companies focus on them is that it essentially proves that you can work with anything -- even if you never worked with a different platform, knowing the fundamentals will likely make it very easy for you to pick them up. A generalist might not know some random trivia about <code>UITableView</code> APIs that a specialist would, but they don't need to because this is the programming equivalent of the musician who can learn how to play a song by just listening to it. It's easy for a generalist to learn programming languages and platforms -- what's difficult to learn are programming skills you need to have to use these languages and platforms, which is exactly what the fundamentals prepare you for.</p>
+ <p>This is why these companies choose to focus on this topic -- while in a regular company you can prove your ability by answering questions about a specific platform, in the larger companies' world of generalists it's your understanding of programming as a concept that proves you're the type of programmer they need.</p>
+ <p>It sucks to be rejected from a dream company, <i>especially</i> when their process is stressful and difficult, but you must understand what you're getting yourself into -- top-tier companies that have amazing salaries, benefits, free food, off-sites and all have <b>thousands</b> of people applying for the same role. What makes you think you're so good that these companies should drop thousands of candidates and hire you with no questions asked? Are you really sure you have absolutely <b>no room</b> for improvement as a programmer?</p>
+ <div class="sponsor-article-ad-auto hidden"></div>
+ <p>I can't help but point out that when people express discontent with interviews they almost always do so from an emotional point of view, almost like a coping mechanism where they blame the company to hide the possibility that there is something that they could improve. I certainly am one to know how that feels -- I got rejected from many companies before landing my current job, and I definitely blamed them too at first when it happened. However, you can't let this overwhelm you because this is simply how the game works -- <i>of course</i> their process is going to be extremely difficult and specific, just look at how many people you're competing with!</p>
+ <p>If your goal is to work for one of these companies, I think it's really important for you to ground yourself emotionally and consider that there might be many areas you'll need to study to be able to compete for a role. Although this is daunting, it can also be beneficial to you -- considering this possibility will give you a better vision of where you want to go in your career, which could very well be that these companies don't actually suit the roles you want to have. If they do suit it, then consider how important these areas are for them and how they could also benefit you. You're capable, but are you the <i>type</i> of capable they're looking for? They're asking for something that you might not know. What are you willing to do to reach your goals?</p>
+</div>]]></description>
+</item>
+<item>
+    <title>Building a Face Detecting Robot with URLSessionWebSocketTask, CoreML, SwiftUI and an Arduino</title>
+    <link>https://rockbruno.com/building-a-face-detecting-sentry-gun-with-urlsessionwebsockettask-coreml-swiftui-and-arduino</link>
+    <guid>https://rockbruno.com/building-a-face-detecting-sentry-gun-with-urlsessionwebsockettask-coreml-swiftui-and-arduino</guid>
+    <pubDate>Tue, 15 Oct 2019 15:39:00 GMT-3</pubDate>
+<description><![CDATA[
+ 
+  
+  <!--WRITEIT_POST_NAME=Building a Face Detecting Robot with URLSessionWebSocketTask, CoreML, SwiftUI and an Arduino--> 
+  <!--WRITEIT_POST_HTML_NAME=building-a-face-detecting-sentry-gun-with-urlsessionwebsockettask-coreml-swiftui-and-arduino--> 
+  <!--WRITEIT_POST_SITEMAP_DATE_LAST_MOD=2020-04-12T14:00:00+02:00--> 
+  <!--WRITEIT_POST_SITEMAP_DATE=2019-10-15T18:39:00+00:00--> 
+  <!--Add here the additional properties that you want each page to possess.--> 
+  <!--These properties can be used to change content in the template page or in the page itself as shown here.--> 
+  <!--Properties must start with 'WRITEIT_POST'.--> 
+  <!--Writeit provides and injects WRITEIT_POST_NAME and WRITEIT_POST_HTML_NAME by default.--> 
+  <!--WRITEIT_POST_SHORT_DESCRIPTION=Some time ago I created a little side project that involved an Arduino-powered servo motor that menacingly pointed at people's faces with the help of CoreML, mimicking the Team Fortress 2 Engineer's Sentry Gun. With iOS 13, I decided to re-write that using the new Socket APIs and SwiftUI.--> 
+  <title>Building a Face Detecting Robot with URLSessionWebSocketTask, CoreML, SwiftUI and an Arduino</title>  
+ 
+
+<div class="blog-post"> 
+ <div class="post-title-index">  
+  <h1>Building a Face Detecting Robot with URLSessionWebSocketTask, CoreML, SwiftUI and an Arduino</h1>
+ </div> 
+ <div class="post-info">
+     <div class="category category-electronics">Electronics</div>
+    <div class="category category-software">Software Engineering</div> 
+  <div class="post-info-text">
+   Published on 16 Oct 2019 
+  </div> 
+ </div>   
+ <div class="post-image margin-top-40 margin-bottom-40"> 
+  <video style="width: 100%; height: auto;" controls> 
+   <source src="https://i.imgur.com/g6lhAxR.mp4" type="video/mp4"> Your browser does not support the video tag. 
+  </video> 
+ </div> 
+ <p>iOS 13 marks the release of long-waited features like Dark Mode, but it also brought some needed changes on less popular aspects. Prior to iOS 13, creating socket connections required coding very low-level network interactions which made libraries like Starscream and Socket.io the go-to solution for sockets in iOS. Now with iOS 13, a new native <code>URLSessionWebSocketTask</code> class is available to finally make creating and managing socket connections easier for developers.</p>
+ <div class="sponsor-article-ad-auto hidden"></div>
+ <p><a href="https://twitter.com/rockbruno_/status/993152346841669632">Some time ago I created a little side project that involved an Arduino-powered servo motor that menacingly pointed at people's faces with the help of CoreML, mimicking the Team Fortress 2 Engineer's Sentry Gun.</a> With iOS 13, I decided to re-write that using the new Socket APIs and SwiftUI.</p>
+ <div class="post-image margin-top-40 margin-bottom-40"> 
+  <video style="width: 100%; height: auto;" controls> 
+   <source src="https://i.imgur.com/g6lhAxR.mp4" type="video/mp4"> Your browser does not support the video tag. 
+  </video> 
+ </div>
+ <p>Although the final project involves an Arduino and a Raspberry Pi, the focus will be the iOS part of it since Swift is the focus of this blog. If at the end you want more info about how the other components are connected, feel free to contact me with questions!</p>
+ <h2>Organizing the ideas</h2>
+ <p>Since this project has several components, lets detail what needs to be done. To build a face tracking murder robot, we'll need an iOS app that does the following:</p>
+ <p> * The app opens the user's camera.</p>
+ <p> * Each time the camera's frame is updated, we capture its output.</p>
+ <p> * The output is routed to Vision's <code>VNDetectFaceRectanglesRequest</code>.</p>
+ <p> * From the results, we draw rectangles on the screen to show where faces were detected.</p>
+ <p> * Assuming that the first found face is our target, we calculate the X/Y angles that our robot should face based on the face's bounds on the screen.</p>
+ <p> * Using sockets, we'll send these angles to a Raspberry Pi which will be running a server and handling the communication with the Arduino-connected servo motor.</p>
+ <p> * While all that happens, we display a HUD with some basic information to the user.</p>
+ <h2>Using URLSessionWebSocketTask</h2>
+ <p>We can start this project by creating a worker class that handles a socket connection to a generic server. Similar to how regular <code>URLSession</code> tasks are created, we can retrieve an instance of a socket task by calling <code>URLSession.webSocketTask()</code> and passing the URL to the socket server:</p>
+ <pre>
+<code>lazy var session = URLSession(configuration: .default,</code>
+<code>                              delegate: self,</code>
+<code>                              delegateQueue: OperationQueue())</code>
+<code></code>
+<code>lazy var webSocketTask: URLSessionWebSocketTask = {</code>
+<code>    // This is the IP of my Raspberry Pi.</code>
+<code>    let url = URL(string: "ws://192.168.15.251:12354")!</code>
+<code>    return session.webSocketTask(with: url)</code>
+<code>}()</code>
+</pre>
+ <p>Although receiving messages from the socket isn't necessary for this project, covering it is important: <code>URLSessionWebSocketTask</code> supports receiving and sending messages in both <code>Data</code> and <code>String</code> formats, and calling <code>receive</code> will allow the client to receive a message from the server:</p>
+ <pre>
+<code>func receive() {</code>
+<code>    webSocketTask.receive { result in</code>
+<code>        switch result {</code>
+<code>        case .success(let message):</code>
+<code>            switch message {</code>
+<code>            case .data(let data):</code>
+<code>                print(data)</code>
+<code>            case .string(let string):</code>
+<code>                print(string)</code>
+<code>            }</code>
+<code>        case .failure(let error):</code>
+<code>            print(error)</code>
+<code>        }</code>
+<code>    }</code>
+<code>}</code>
+</pre>
+ <p>An important aspect here is that unlike other Socket solutions for iOS, <code>receive</code> <b>isn't permanent -- once you receive a message, you'll need to call this method again to receive more messages.</b> This is a very weird design decision considering that the point of sockets is to continuously receive and send messages, but it's how it works in iOS 13.</p>
+ <p>In a similar fashion, sending messages can be done by calling the <code>send</code> method:</p>
+ <pre>
+<code>webSocketTask.send(.string("I love sockets!")) { error in</code>
+<code>    if let error = error {</code>
+<code>        print(error)</code>
+<code>    }</code>
+<code>}</code>
+</pre>
+ <h2>Connecting to URLSessionWebSocketTask servers</h2>
+ <p>Similar to how regular tasks are started, socket tasks can be initiated by calling the <code>resume()</code> method from the task. After the connection is made, the process of receiving and sending messages will start, and updates to the socket's connection will be posted via the <code>URLSessionWebSocketDelegate</code> type. That's a lot easier than pre-iOS 13 socket solutions!</p>
+ <p><b>An important server-side aspect of </b><code>URLSessionWebSocketTask</code><b> that is not documented is that Apple expects socket servers to conform to the</b> <a href="https://tools.ietf.org/html/rfc6455">RFC 6455 - Web Socket Protocol</a>. While Starscream and Socket.io allow you to play with sockets in iOS with simple generic Python servers, using <code>URLSessionWebSocketTask</code> will require you to build a server that is capable of handling the protocol's handshakes and data patterns. If the server doesn't conform to RFC 6455, iOS will simply never connect to the server. <a href="https://gist.github.com/rich20bb/4190781">This is an example of a Python server that works with it, which you can use to test the new socket APIs.</a></p>
+ <h2>SocketWorker</h2>
+ <p>Now that we know how to use iOS 13's new socket class we can build a simple wrapper class to use it. Because we're going to build our UI with SwiftUI, my worker class will inherit from <code>ObservableObject</code> and define a publisher to allow me to route the socket's connection information back to the views. Here's the almost final version of the <code>SocketWorker</code> (sending messages will be added later):</p>
+ <pre>
+<code>final class SocketWorker: NSObject, ObservableObject {</code>
+<code>    lazy var session = URLSession(configuration: .default,</code>
+<code>                                  delegate: self,</code>
+<code>                                  delegateQueue: OperationQueue())</code>
+<code></code>
+<code>    lazy var webSocketTask: URLSessionWebSocketTask = {</code>
+<code>        let url = URL(string: "ws://169.254.141.251:12354")!</code>
+<code>        return session.webSocketTask(with: url)</code>
+<code>    }()</code>
+<code></code>
+<code>    var lastSentData = ""</code>
+<code></code>
+<code>    let objectWillChange = ObservableObjectPublisher()</code>
+<code></code>
+<code>    var isConnected: Bool? = nil {</code>
+<code>        willSet {</code>
+<code>            DispatchQueue.main.async { [weak self] in</code>
+<code>                self?.objectWillChange.send()</code>
+<code>            }</code>
+<code>        }</code>
+<code>    }</code>
+<code></code>
+<code>    var connectionStatus: String {</code>
+<code>        guard let isConnected = isConnected else {</code>
+<code>            return "Connecting..."</code>
+<code>        }</code>
+<code>        if isConnected {</code>
+<code>            return "Connected"</code>
+<code>        } else {</code>
+<code>            return "Disconnected"</code>
+<code>        }</code>
+<code>    }</code>
+<code></code>
+<code>    func resume() {</code>
+<code>        webSocketTask.resume()</code>
+<code>    }</code>
+<code></code>
+<code>    func suspend() {</code>
+<code>        webSocketTask.suspend()</code>
+<code>    }</code>
+<code>}</code>
+<code></code>
+<code>extension SocketWorker: URLSessionWebSocketDelegate {</code>
+<code>    func urlSession(_ session: URLSession, webSocketTask: URLSessionWebSocketTask, didOpenWithProtocol protocol: String?) {</code>
+<code>        isConnected = true</code>
+<code>    }</code>
+<code></code>
+<code>    func urlSession(_ session: URLSession, webSocketTask: URLSessionWebSocketTask, didCloseWith closeCode: URLSessionWebSocketTask.CloseCode, reason: Data?) {</code>
+<code>        isConnected = false</code>
+<code>    }</code>
+<code>}</code>
+</pre>
+ <p>It would be nice to display the socket's connection status and camera's targeting information to the user, so we'll build a view to do so. Thankfully SwiftUI allows us to do this quicker than ever:</p>
+ <div class="post-image margin-top-40 margin-bottom-40"> 
+  <img src="https://i.imgur.com/QrHhYgS.png" alt="" style="max-width: 100%"> 
+ </div>
+ <pre>
+<code>struct DataView: View {</code>
+<code></code>
+<code>    let descriptionText: String</code>
+<code>    let degreesText: String</code>
+<code>    let connectionText: String</code>
+<code>    let isConnected: Bool?</code>
+<code></code>
+<code>    let padding: CGFloat = 32</code>
+<code></code>
+<code>    var body: some View {</code>
+<code>        VStack(alignment: .center) {</code>
+<code>            HStack {</code>
+<code>                Text(connectionText)</code>
+<code>                    .font(.system(.callout))</code>
+<code>                    .foregroundColor(isConnected == true ? .green : .red)</code>
+<code>                Spacer()</code>
+<code>            }</code>
+<code>            Spacer()</code>
+<code>            VStack(alignment: .center, spacing: 8) {</code>
+<code>                Text(descriptionText)</code>
+<code>                    .font(.system(.largeTitle))</code>
+<code>                Text(degreesText)</code>
+<code>                    .font(.system(.title))</code>
+<code>            }</code>
+<code>        }.padding(padding)</code>
+<code>    }</code>
+<code>}</code>
+</pre>
+ <h2>TargetDataViewModel</h2>
+ <p>To allow our <code>DataView</code> to receive the camera's targeting information, we'll create an observable <code>TargetDataViewModel</code> that will be responsible for storing and routing the user's UI strings as well as the actual data that will be sent to the socket.</p>
+ <p>Processing the socket data will work by receiving a face's <code>CGRect</code>; based on the face's frame on the screen, we can calculate the X and Y angles that the Arduino's servo motor should be aiming at. In this case since I only have one servo, only the X angle will be sent to the socket. You can send anything to the socket, and for simplicity, I've decided to follow the <code>X{angle}.</code> format. This means that if the servo needs to aim at 90 degrees, the socket will receive a message containing <code>X90.</code>. The dot at the end serves as an "end of command" token, which makes things easier on the Arduino side. If there's no visible face on the screen, we'll send <code>L</code> to the socket (as in, target lost). We'll make this communication work through delegates so we can send this data back to <code>SocketWorker</code>:</p>
+ <pre>
+<code>protocol TargetDataViewModelDelegate: AnyObject {</code>
+<code>    func targetDataDidChange(_ data: String)</code>
+<code>}</code>
+<code></code>
+<code>class TargetDataViewModel: ObservableObject {</code>
+<code></code>
+<code>    weak var delegate: TargetDataViewModelDelegate?</code>
+<code></code>
+<code>    let objectWillChange = ObservableObjectPublisher()</code>
+<code></code>
+<code>    var targetTitle = "..." {</code>
+<code>        willSet {</code>
+<code>            self.objectWillChange.send()</code>
+<code>        }</code>
+<code>    }</code>
+<code></code>
+<code>    var targetDescription = "..." {</code>
+<code>        willSet {</code>
+<code>            self.objectWillChange.send()</code>
+<code>        }</code>
+<code>    }</code>
+<code></code>
+<code>    func process(target: CGRect?) {</code>
+<code>        guard let target = target else {</code>
+<code>            targetTitle = "Sentry mode"</code>
+<code>            targetDescription = "No targets"</code>
+<code>            delegate?.targetDataDidChange("L")</code>
+<code>            return</code>
+<code>        }</code>
+<code>        let oldMin: CGFloat = 0</code>
+<code>        let offset: CGFloat = 40</code>
+<code>        let newMin: CGFloat = 0 + offset</code>
+<code>        let newMax: CGFloat = 180 - offset</code>
+<code>        let newRange = newMax - newMin</code>
+<code>        func convertToDegrees(position: CGFloat, oldMax: CGFloat) -&gt; Int {</code>
+<code>            let oldRange = oldMax - oldMin</code>
+<code>            let scaledAngle = (((position - oldMin) * newRange) / oldRange) + newMin</code>
+<code>            return Int(scaledAngle)</code>
+<code>        }</code>
+<code>        let bounds = UIScreen.main.bounds</code>
+<code>        let oldMaxX = bounds.width</code>
+<code>        let oldMaxY = bounds.height</code>
+<code>        let xAngle = convertToDegrees(position: target.midX, oldMax: oldMaxX)</code>
+<code>        let yAngle = convertToDegrees(position: target.midY, oldMax: oldMaxY)</code>
+<code>        targetTitle = "Shooting"</code>
+<code>        targetDescription = "X: \(xAngle) | Y: \(yAngle)"</code>
+<code>        let data = "X\(xAngle)."</code>
+<code>        delegate?.targetDataDidChange(data)</code>
+<code>    }</code>
+<code>}</code>
+</pre>
+ <p>With the view model in place, we can finish <code>SocketWorker</code> by making it send the target's information to the socket:</p>
+ <pre>
+<code>extension SocketWorker: TargetDataViewModelDelegate {</code>
+<code>    func targetDataDidChange(_ data: String) {</code>
+<code>        // Avoid sending duplicate data to the socket.</code>
+<code>        guard data != lastSentData else {</code>
+<code>            return</code>
+<code>        }</code>
+<code>        lastSentData = data</code>
+<code>        webSocketTask.send(.string(data)) { error in</code>
+<code>            if let error = error {</code>
+<code>                print(error)</code>
+<code>            }</code>
+<code>        }</code>
+<code>    }</code>
+<code>}</code>
+</pre>
+ <h2>Showing the user's camera on the screen</h2>
+ <p>Getting access to a device's camera with SwiftUI has a small problem. Although we can easily do it in UIKit using <code>AVCaptureVideoPreviewLayer</code>, the concept of layers doesn't really exist in SwiftUI, so we can't use this layer in normal SwiftUI views. Fortunately, Apple allows you to create bridges between UIKit and SwiftUI so that no functionality is lost.</p>
+ <p>In order to display a camera, we'll need to build an old-fashioned UIKit <code>CameraViewController</code> and bridge it to SwiftUI using the <code>UIViewControllerRepresentable</code> protocol. We'll also route our data view model to this view controller so it can update it based on the camera's output:</p>
+ <pre>
+<code>struct CameraViewWrapper: UIViewControllerRepresentable {</code>
+<code></code>
+<code>    typealias UIViewControllerType = CameraViewController</code>
+<code>    typealias Context = UIViewControllerRepresentableContext</code>
+<code></code>
+<code>    let viewController: CameraViewController</code>
+<code></code>
+<code>    func makeUIViewController(context: Context&lt;CameraViewWrapper&gt;) -&gt; CameraViewController {</code>
+<code>        return viewController</code>
+<code>    }</code>
+<code></code>
+<code>    func updateUIViewController(_ uiViewController: CameraViewController, context: Context&lt;CameraViewWrapper&gt;) {}</code>
+<code>}</code>
+<code></code>
+<code>final class CameraViewController: UIViewController, ObservableObject {</code>
+<code></code>
+<code>    @ObservedObject var targetViewModel: TargetDataViewModel</code>
+<code></code>
+<code>    init(targetViewModel: TargetDataViewModel) {</code>
+<code>        self.targetViewModel = targetViewModel</code>
+<code>        super.init(nibName: nil, bundle: nil)</code>
+<code>    }</code>
+<code></code>
+<code>    required init?(coder: NSCoder) {</code>
+<code>        fatalError()</code>
+<code>    }</code>
+<code></code>
+<code>    override func loadView() {</code>
+<code>        let view = CameraView(delegate: self)</code>
+<code>        self.view = view</code>
+<code>    }</code>
+<code></code>
+<code>    override func viewWillAppear(_ animated: Bool) {</code>
+<code>        super.viewWillAppear(animated)</code>
+<code>        (view as? CameraView)?.startCaptureSession()</code>
+<code>    }</code>
+<code></code>
+<code>    override func viewWillDisappear(_ animated: Bool) {</code>
+<code>        super.viewWillAppear(animated)</code>
+<code>        (view as? CameraView)?.stopCaptureSession()</code>
+<code>    }</code>
+<code>}</code>
+<code></code>
+<code>extension CameraViewController: CameraViewDelegate {</code>
+<code>    func cameraViewDidTarget(frame: CGRect) {</code>
+<code>        targetViewModel.process(target: frame, view: view)</code>
+<code>    }</code>
+<code></code>
+<code>    func cameraViewFoundNoTargets() {</code>
+<code>        targetViewModel.process(target: nil, view: view)</code>
+<code>    }</code>
+<code>}</code>
+</pre>
+ <p>I will skip the definition of <code>CameraView</code> because the code is massive and there's nothing special about it -- we just add a camera layer to the screen and start recording once the view controller appears. We also define a <code>CameraViewDelegate</code> so that our face detection events can be routed back to our view model. <a href="https://github.com/rockbruno/NSSentryGun">You can see the code for it in the NSSentryGun repo.</a></p>
+ <p>Now with the actual face detection being all that's left, we can wrap everything up into our app's main <code>ContentView</code>!</p>
+ <pre>
+<code>struct ContentView: View {</code>
+<code></code>
+<code>    @ObservedObject var socketWorker: SocketWorker</code>
+<code>    @ObservedObject var targetViewModel: TargetDataViewModel</code>
+<code></code>
+<code>    let cameraViewController: CameraViewController</code>
+<code></code>
+<code>    init() {</code>
+<code>        self.socketWorker = SocketWorker()</code>
+<code>        let targetViewModel = TargetDataViewModel()</code>
+<code>        self.targetViewModel = targetViewModel</code>
+<code>        self.cameraViewController = CameraViewController(</code>
+<code>            targetViewModel: targetViewModel</code>
+<code>        )</code>
+<code>        targetViewModel.delegate = socketWorker</code>
+<code>    }</code>
+<code></code>
+<code>    var body: some View {</code>
+<code>        ZStack {</code>
+<code>            CameraViewWrapper(</code>
+<code>                viewController: cameraViewController</code>
+<code>            )</code>
+<code>            DataView(</code>
+<code>                descriptionText: targetViewModel.targetTitle,</code>
+<code>                degreesText: targetViewModel.targetDescription,</code>
+<code>                connectionText: socketWorker.connectionStatus,</code>
+<code>                isConnected: socketWorker.isConnected</code>
+<code>            ).expand()</code>
+<code>        }.onAppear {</code>
+<code>            self.socketWorker.resume()</code>
+<code>        }.onDisappear {</code>
+<code>            self.socketWorker.suspend()</code>
+<code>        }.expand()</code>
+<code>    }</code>
+<code>}</code>
+<code></code>
+<code>extension View {</code>
+<code>    func expand() -&gt; some View {</code>
+<code>        return frame(</code>
+<code>            minWidth: 0,</code>
+<code>            maxWidth: .infinity,</code>
+<code>            minHeight: 0,</code>
+<code>            maxHeight: .infinity,</code>
+<code>            alignment: .topLeading</code>
+<code>        )</code>
+<code>    }</code>
+<code>}</code>
+</pre>
+ <p>After turning on our socket server, running this app will allow us to connect to it and see the user's camera. However, no information will be actually sent since we're doing nothing with the camera's output yet.</p>
+ <div class="post-image margin-top-40 margin-bottom-40"> 
+  <img src="https://i.imgur.com/lNh5OBu.jpg" alt="" style="max-width: 100%">&gt; 
+ </div>
+ <h2>Detecting faces in images with CoreML</h2>
+ <p>After the release of CoreML, every iOS release adds new capabilities to the built-in <code>Vision</code> framework. In this case, the ability to detect faces in an image can be easily done by performing the <code>VNDetectFaceRectanglesRequest</code> request with the camera's output as a parameter.</p>
+ <p>The result of this request is a <code>[VNFaceObservation]</code> array that contains the bounding box of every face detected in the image. We can use this result to draw rectangles around the detected faces and use these rectangles as the input for our previously made <code>TargetDataViewModel</code>. Before defining the request itself, lets first handle the response code inside <code>CameraView</code>:</p>
+ <pre>
+<code>func handleFaces(request: VNRequest, error: Error?) {</code>
+<code>    DispatchQueue.main.async { [unowned self] in</code>
+<code>        guard let results = request.results as? [VNFaceObservation] else {</code>
+<code>            return</code>
+<code>        }</code>
+<code>        // We'll add all drawn rectangles in a `maskLayer` property</code>
+<code>        // and remove them when we get new responses.</code>
+<code>        for mask in self.maskLayer {</code>
+<code>            mask.removeFromSuperlayer()</code>
+<code>        }</code>
+<code>        let frames: [CGRect] = results.map {</code>
+<code>            let transform = CGAffineTransform(scaleX: 1, y: -1)</code>
+<code>                                .translatedBy(x: 0, y: -self.frame.height)</code>
+<code>            let translate = CGAffineTransform</code>
+<code>                                .identity</code>
+<code>                                .scaledBy(x: self.frame.width, y: self.frame.height)</code>
+<code>            return $0.boundingBox</code>
+<code>                        .applying(translate)</code>
+<code>                        .applying(transform)</code>
+<code>        }</code>
+<code>        frames</code>
+<code>            .sorted { ($0.width * $0.height) &gt; ($1.width * $1.height) }</code>
+<code>            .enumerated()</code>
+<code>            .forEach(self.drawFaceBox)</code>
+<code>        guard let targetRect = results.first else {</code>
+<code>            self.delegate.cameraViewFoundNoTargets()</code>
+<code>            return</code>
+<code>        }</code>
+<code>        delegate.cameraViewDidTarget(frame: targetRect)</code>
+<code>    }</code>
+<code>}</code>
+</pre>
+ <p>(The <code>boundingBox</code> property contains values from zero to one with the y-axis going up from the bottom, so this method also needs to handle scaling and reversing the y-axis for the box to match the camera's bounds.)</p>
+ <p>After processing the face's rectangle, we sort them by total area and draw them on the screen. We'll consider the rectangle with the biggest area as our target.</p>
+ <pre>
+<code>func drawFaceBox(index: Int, frame: CGRect) {</code>
+<code>    let color = index == 0 ? UIColor.red.cgColor : UIColor.yellow.cgColor</code>
+<code>    createLayer(in: frame, color: UIColor.red.cgColor)</code>
+<code>}</code>
+<code></code>
+<code>private func createLayer(in rect: CGRect, color: CGColor) {</code>
+<code>    let mask = CAShapeLayer()</code>
+<code>    mask.frame = rect</code>
+<code>    mask.opacity = 1</code>
+<code>    mask.borderColor = color</code>
+<code>    mask.borderWidth = 2</code>
+<code>    maskLayer.append(mask)</code>
+<code>    layer.insertSublayer(mask, at: 1)</code>
+<code>}</code>
+</pre>
+ <p>To perform the request, we need access to the camera's image buffer. This can be done by setting our <code>CameraView</code> as the layer's <code>AVCaptureVideoDataOutput</code> delegate, which has a method containing the camera's buffer. We can then convert the buffer into Vision's expected <code>CVImageBuffer</code> input and finally perform the request:</p>
+ <pre>
+<code>extension CameraView: AVCaptureVideoDataOutputSampleBufferDelegate {</code>
+<code>    func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {</code>
+<code>        guard let pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer),</code>
+<code>              let exifOrientation = CGImagePropertyOrientation(rawValue: 0) else</code>
+<code>        {</code>
+<code>            return</code>
+<code>        }</code>
+<code>        var requestOptions: [VNImageOption : Any] = [:]</code>
+<code>        let key = kCMSampleBufferAttachmentKey_CameraIntrinsicMatrix</code>
+<code>        if let cameraIntrinsicData = CMGetAttachment(sampleBuffer, key: key, attachmentModeOut: nil) {</code>
+<code>            requestOptions = [.cameraIntrinsics: cameraIntrinsicData]</code>
+<code>        }</code>
+<code>        let imageRequestHandler = VNImageRequestHandler(</code>
+<code>            cvPixelBuffer: pixelBuffer,</code>
+<code>            orientation: exifOrientation,</code>
+<code>            options: requestOptions</code>
+<code>       )</code>
+<code>        do {</code>
+<code>            let request = VNDetectFaceRectanglesRequest(completionHandler: handleFaces)</code>
+<code>            try imageRequestHandler.perform([request])</code>
+<code>        } catch {</code>
+<code>            print(error)</code>
+<code>        }</code>
+<code>    }</code>
+<code>}</code>
+</pre>
+ <p>If we run the app now and point at something, we'll see rectangles being drawn around faces!</p>
+ <div class="post-image margin-top-40 margin-bottom-40"> 
+  <img src="https://i.imgur.com/kQtDmQ5.jpg" alt="" style="max-width: 100%"> 
+ </div>
+ <p>And because we're using <code>ObservableObjects</code>, the processing that happens inside <code>TargetDataViewModel</code> will be published back to the <code>SocketWorker</code>, which will finally send our target's information to the server.</p>
+ <div class="post-image"> 
+  <img src="https://i.imgur.com/AJZyMyE.png" alt="" style="max-width: 100%"> 
+ </div>
+ <h2>Beyond iOS: Making an Arduino receive this information</h2>
+ <p>As stated at the beginning of the article I won't go too deep on the components that aren't iOS related, but if you're wondering how sending the information to a socket results in a servo motor being moved, we'll use this section to talk more about it.</p>
+ <p>Arduinos can communicate with other devices through its serial port, which is connected as a USB device on the other end. With the Arduino connected to your server (I used a Raspberry Pi for the video in the introduction, but simply running the server script on your Mac works as well), you can use Python's <code>serial</code> library to open a connection with the Arduino:</p>
+ <pre>
+<code>import serial</code>
+<code>ser = serial.Serial('/dev/cu.usbmodem1412401', 9600)</code>
+</pre>
+ <p>In this case, <code>/dev/cu.usbmodem1412401</code> is the name of the port where my Arduino is connected, and 9600 is the baud rate expected by the Arduino.</p>
+ <p>When the server receives data from the iOS app, we can write it into the serial port:</p>
+ <pre>
+<code>while True:</code>
+<code>    newData = client.recv(4096)</code>
+<code>    msg = self.connections[fileno].recover(newData)</code>
+<code>    if not msg: continue</code>
+<code>    print msg</code>
+<code>    ser.write(msg)</code>
+</pre>
+ <p>If the Arduino is listening to its serial port, it will be able to receive this data and parse it into something meaningful. With a servo motor connected to pin 9, here's the Arduino C code to parse the little rules we created when processing the data in the view model:</p>
+ <pre>
+<code>#include &lt;Servo.h&gt;</code>
+<code></code>
+<code>Servo myservo;</code>
+<code></code>
+<code>bool isScanning = false;</code>
+<code></code>
+<code>void setup() {</code>
+<code>  Serial.begin(9600);</code>
+<code>  myservo.attach(9);</code>
+<code>  myservo.write(90);</code>
+<code>  delay(1000);</code>
+<code>}</code>
+<code></code>
+<code>void loop() {</code>
+<code>  if (isScanning == true) {</code>
+<code>    scan();</code>
+<code>    return;</code>
+<code>  }</code>
+<code>  if (Serial.available() &gt; 0) {</code>
+<code>    char incomingByte = Serial.read();</code>
+<code>    if (incomingByte == 'L') {</code>
+<code>      isScanning = true;</code>
+<code>    } else if (incomingByte == 'X') { // else if</code>
+<code>      setServoAngle();</code>
+<code>    } else { //Unwanted data, get rid of it</code>
+<code>      while(Serial.read() != -1) {</code>
+<code>        incomingByte = Serial.read();</code>
+<code>      }</code>
+<code>    }</code>
+<code>  }</code>
+<code>}</code>
+<code></code>
+<code>void scan() {</code>
+<code>  int angle = myservo.read();</code>
+<code>  for (int i = angle; i&lt;= 160; i++) {</code>
+<code>    if (Serial.peek() != -1) {</code>
+<code>      isScanning = false;</code>
+<code>      return;</code>
+<code>    }</code>
+<code>    myservo.write(i);</code>
+<code>    delay(15);</code>
+<code>  }</code>
+<code>  for (int i = 160; i&gt;= 20; i--) {</code>
+<code>    if (Serial.peek() != -1) {</code>
+<code>      isScanning = false;</code>
+<code>      return;</code>
+<code>    }</code>
+<code>    myservo.write(i);</code>
+<code>    delay(15);</code>
+<code>  }</code>
+<code>}</code>
+<code></code>
+<code>void setServoAngle() {</code>
+<code>  unsigned int integerValue = 0;</code>
+<code>  while(1) {</code>
+<code>    char incomingByte = Serial.read();</code>
+<code>    if (incomingByte == -1) {</code>
+<code>      continue;</code>
+<code>    }</code>
+<code>    if (isdigit(incomingByte) == false) {</code>
+<code>      break;</code>
+<code>    }</code>
+<code>    integerValue *= 10;</code>
+<code>    integerValue = ((incomingByte - 48) + integerValue);</code>
+<code>  }</code>
+<code>  if (integerValue &gt;= 0 &amp;&amp; integerValue &lt;= 180) {</code>
+<code>      myservo.write(integerValue);</code>
+<code>  }</code>
+<code>}</code>
+</pre>
+ <p>To make it short, Arduino will enter a "scan mode" that makes the servo wiggle back and forth if an <code>L</code> is received from the server. This goes on until an <code>X</code> is received -- when this happens, the Arduino then parses the numeric component of the command and sets it as the servo's angle. All that's left now is to attach a Nerf gun to it and make it actually shoot intruders!</p>
+ <h2>Conclusion</h2>
+ <div class="sponsor-article-ad-auto hidden"></div>
+ <p>The introduction of the new URLSessionWebSocketTask finally solves a major pain point in developing networking applications for iOS, and I hope this article sparks some ideas for new side projects for you. Creating side projects is a cool way to learn new technologies -- I first did this project to know more about Raspberry Pis, and this article was a chance for me to have my first interaction with SwiftUI and Combine after Xcode 11's release.</p>
+ <p>Follow me on my Twitter (<a href="https://twitter.com/rockbruno_">@rockbruno_</a>), and let me know of any suggestions and corrections you want to share.</p>
+ <h2>References and Good reads</h2>
+ <a href="https://developer.apple.com/documentation/foundation/urlsessionwebsockettask">URLSessionWebSocketTask</a>
+ <br>
+ <a href="https://tools.ietf.org/html/rfc6455">RFC 6455 - The WebSocket Protocol</a>
+ <br>
+ <a href="https://gist.github.com/rich20bb/4190781">Python implementation of an RFC 6455 socket server</a>
+ <br>
+</div>]]></description>
+</item>
+<item>
+    <title>Timsort and Introsort: Swift's Sorting Algorithms</title>
+    <link>https://rockbruno.com/introsort-timsort-swifts-sorting-algorithm</link>
+    <guid>https://rockbruno.com/introsort-timsort-swifts-sorting-algorithm</guid>
+    <pubDate>Wed, 4 Sep 2019 15:00:00 GMT-3</pubDate>
+<description><![CDATA[
+ 
+  
+  <!--WRITEIT_POST_NAME=Timsort and Introsort: Swift's Sorting Algorithms--> 
+  <!--WRITEIT_POST_HTML_NAME=introsort-timsort-swifts-sorting-algorithm--> 
+  <!--WRITEIT_POST_SITEMAP_DATE_LAST_MOD=2020-04-12T14:00:00+02:00--> 
+  <!--WRITEIT_POST_SITEMAP_DATE=2019-09-04T18:00:00+00:00--> 
+  <!--Add here the additional properties that you want each page to possess.--> 
+  <!--These properties can be used to change content in the template page or in the page itself as shown here.--> 
+  <!--Properties must start with 'WRITEIT_POST'.--> 
+  <!--Writeit provides and injects WRITEIT_POST_NAME and WRITEIT_POST_HTML_NAME by default.--> 
+  <!--WRITEIT_POST_SHORT_DESCRIPTION=Have you ever asked yourself which algorithm is used by Swift's sorting method? There are many sorting algorithms out there, and chances are that you'll rarely have to use something other than the language's builtin sort() method. However, knowing the properties of the sorting algorithm built into your language is important if you want to prevent unwanted behaviors and nasty edge cases.--> 
+  <title>Timsort and Introsort: Swift's Sorting Algorithms</title>  
+ 
+
+<div class="blog-post"> 
+ <div class="post-title-index">  
+  <h1>Timsort and Introsort: Swift's Sorting Algorithms</h1>
+ </div> 
+ <div class="post-info"> 
+<div class="category category-software">Software Engineering</div>
+  <div class="post-info-text">
+   Published on 04 Sep 2019 
+  </div> 
+ </div>  
+ <p>Have you ever asked yourself which algorithm is used by Swift's sorting method? There are many sorting algorithms out there, and chances are that you'll rarely have to use something other than the language's builtin <code>sort()</code> method. However, knowing the properties of the sorting algorithm built into your language is important if you want to prevent unwanted behaviors and nasty edge cases.</p>
+ <div class="sponsor-article-ad-auto hidden"></div>
+ <p>When analyzing sorting algorithms, you'll want to search for two properties:</p>
+ <h2>1 - Sorting Stability</h2>
+ <p>The <b>stability</b> of a sorting algorithm represents the ability of the algorithm to <b>maintain the original order of equal elements after sorting</b>. An <b>unstable</b> sorting algorithm has no guarantees that the order of equal elements in the unsorted array will stay the same after sorting, while a <b>stable</b> one guarantees that they will stay the same.</p>
+ <p>This might sound weird, after all, if the elements are the same, why should I care about their overall order? This can be true if you're sorting elements by value, but when sorting elements by some arbitrary <b>priority</b>, using unstable algorithms can give you undesired results.</p>
+ <p>Let's assume that we're building a music player, and our current task is to sort songs based on their popularity:</p>
+ <pre>
+<code>struct Music: Comparable, Equatable, CustomStringConvertible {</code>
+<code>    let name: String</code>
+<code>    let popularityValue: Int</code>
+<code></code>
+<code>    static func &lt; (lhs: Music, rhs: Music) -&gt; Bool {</code>
+<code>        return lhs.popularityValue &lt; rhs.popularityValue</code>
+<code>    }</code>
+<code></code>
+<code>    var description: String {</code>
+<code>        return name</code>
+<code>    }</code>
+<code>}</code>
+<code></code>
+<code>var songs: [Music] = [</code>
+<code>    Music(name: "I'm that swifty", popularityValue: 3),</code>
+<code>    Music(name: "Swift boi", popularityValue: 5),</code>
+<code>    Music(name: "Swift That Walk", popularityValue: 1),</code>
+<code>    Music(name: "Too Swift", popularityValue: 5),</code>
+<code>]</code>
+</pre>
+ <p>If we sort <code>songs</code> using Quicksort, we'll get the following result:</p>
+ <pre>
+<code>extension Array where Element: Equatable &amp; Comparable {</code>
+<code>    func quicksort(comparison: ((Element, Element) -&gt; Bool)) -&gt; [Element] {</code>
+<code>        var copy = self</code>
+<code>        copy.quick(0, count - 1, comparison: comparison)</code>
+<code>        return copy</code>
+<code>    }</code>
+<code></code>
+<code>    mutating private func quick(_ i: Int, _ j: Int, comparison: ((Element, Element) -&gt; Bool)) {</code>
+<code>        guard i &lt; j else {</code>
+<code>            return</code>
+<code>        }</code>
+<code>        let pivot = partition(i, j, comparison: comparison)</code>
+<code>        quick(i, pivot - 1, comparison: comparison)</code>
+<code>        quick(pivot + 1, j, comparison: comparison)</code>
+<code>    }</code>
+<code></code>
+<code>    mutating private func partition(_ i: Int, _ j: Int, comparison: ((Element, Element) -&gt; Bool)) -&gt; Int {</code>
+<code>        let pivotElement = self[j]</code>
+<code>        var indexToAdd = i - 1</code>
+<code>        for k in i..&lt;j {</code>
+<code>            if comparison(self[k], pivotElement) {</code>
+<code>                indexToAdd += 1</code>
+<code>                swapAt(indexToAdd, k)</code>
+<code>            }</code>
+<code>        }</code>
+<code>        swapAt(indexToAdd + 1, j)</code>
+<code>        return indexToAdd + 1</code>
+<code>    }</code>
+<code>}</code>
+<code></code>
+<code>songs = songs.quicksort {</code>
+<code>    $0.popularityValue &gt; $1.popularityValue</code>
+<code>}</code>
+<code>print(songs)</code>
+</pre>
+ <pre>
+<code>// [Too Swift, Swift boi, I'm that swifty, Swift That Walk]</code>
+</pre>
+ <p>Although <code>"Swift boi"</code> was placed before <code>"Too Swift"</code> in the original array, Quicksort changed their positions!</p>
+ <p>That's not too bad though as we never actually used the unsorted version of the array. However, consider what happens if we re-sort the array multiple times:</p>
+ <pre>
+<code>songs = songs.quicksort {</code>
+<code>    $0.popularityValue &gt; $1.popularityValue</code>
+<code>}</code>
+<code>print(songs)</code>
+<code>songs = songs.quicksort {</code>
+<code>    $0.popularityValue &gt; $1.popularityValue</code>
+<code>}</code>
+<code>print(songs)</code>
+<code>songs = songs.quicksort {</code>
+<code>    $0.popularityValue &gt; $1.popularityValue</code>
+<code>}</code>
+<code>print(songs)</code>
+<code>songs = songs.quicksort {</code>
+<code>    $0.popularityValue &gt; $1.popularityValue</code>
+<code>}</code>
+<code>print(songs)</code>
+<code>songs = songs.quicksort {</code>
+<code>    $0.popularityValue &gt; $1.popularityValue</code>
+<code>}</code>
+<code>print(songs)</code>
+</pre>
+ <pre>
+<code>// [Too Swift, Swift boi, I'm that swifty, Swift That Walk]</code>
+<code>// [Swift boi, Too Swift, I'm that swifty, Swift That Walk]</code>
+<code>// [Too Swift, Swift boi, I'm that swifty, Swift That Walk]</code>
+<code>// [Swift boi, Too Swift, I'm that swifty, Swift That Walk]</code>
+<code>// [Too Swift, Swift boi, I'm that swifty, Swift That Walk]</code>
+</pre>
+ <p>Their relative order keeps changing!</p>
+ <p>The reason is because Quicksort is an <b>unstable</b> sorting algorithm. If for some reason we needed to continuously update this list in the UI, the user would see songs changing positions in the ranking even though they have the same priority. That's not very good.</p>
+ <p>To keep their order, we need to use a <b>stable</b> algorithm like <b>Mergesort</b>.</p>
+ <pre>
+<code>extension Array where Element: Equatable &amp; Comparable {</code>
+<code>    func mergesort(comparison: ((Element, Element) -&gt; Bool)) -&gt; [Element] {</code>
+<code>        return merge(0, count - 1, comparison: comparison)</code>
+<code>    }</code>
+<code></code>
+<code>    private func merge(_ i: Int, _ j: Int, comparison: ((Element, Element) -&gt; Bool)) -&gt; [Element] {</code>
+<code>        guard i &lt;= j else {</code>
+<code>            return []</code>
+<code>        }</code>
+<code>        guard i != j else {</code>
+<code>            return [self[i]]</code>
+<code>        }</code>
+<code>        let half = i + (j - i) / 2</code>
+<code>        let left = merge(i, half, comparison: comparison)</code>
+<code>        let right = merge(half + 1, j, comparison: comparison)</code>
+<code>        var i1 = 0</code>
+<code>        var i2 = 0</code>
+<code>        var new = [Element]()</code>
+<code>        new.reserveCapacity(left.count + right.count)</code>
+<code>        while i1 &lt; left.count &amp;&amp; i2 &lt; right.count {</code>
+<code>            if comparison(right[i2], left[i1]) {</code>
+<code>                new.append(right[i2])</code>
+<code>                i2 += 1</code>
+<code>            } else {</code>
+<code>                new.append(left[i1])</code>
+<code>                i1 += 1</code>
+<code>            }</code>
+<code>        }</code>
+<code>        while i1 &lt; left.count {</code>
+<code>            new.append(left[i1])</code>
+<code>            i1 += 1</code>
+<code>        }</code>
+<code>        while i2 &lt; right.count {</code>
+<code>            new.append(right[i2])</code>
+<code>            i2 += 1</code>
+<code>        }</code>
+<code>        return new</code>
+<code>    }</code>
+<code>}</code>
+</pre>
+ <pre>
+<code>// [Swift boi, Too Swift, I'm that swifty, Swift That Walk]</code>
+<code>// [Swift boi, Too Swift, I'm that swifty, Swift That Walk]</code>
+<code>// [Swift boi, Too Swift, I'm that swifty, Swift That Walk]</code>
+<code>// [Swift boi, Too Swift, I'm that swifty, Swift That Walk]</code>
+<code>// [Swift boi, Too Swift, I'm that swifty, Swift That Walk]</code>
+</pre>
+ <h2>2 - Time/Space Complexity</h2>
+ <p>The second important thing to be aware of is how much additional memory the algorithm takes to run and what are best/worst cases for the algorithm.</p>
+ <p>My favorite example of this is <b>Counting Sort</b>: where an array is sorted by simply counting the occurrences of each element number of elements and then laying them out in order. If the difference between each value is small, say <code>[3,1,4,2,5]</code>, this algorithm can sort arrays in runtimes very close to <b>O(n)</b> -- but if the difference is big, like <code>[1,1000000000]</code>, Counting Sort will take an enormous amount of time to run even if the array is small.</p>
+ <p>Likewise, the famous Quick Sort is highly regarded for being a fast and in-place O(n log n) algorithm in average, but it has a terrible worst case of O(n2) if the pivot is always the highest/smallest element in the partition. If you're dealing with large amounts of data or a constrained environment, there will be a specific sorting algorithm that best fits your needs.</p>
+ <h2>Pre-Swift 5 Algorithm: Introsort</h2>
+ <p>Before Swift 5, Swift's sorting algorithm was a hybrid algorithm called <b>Introsort</b>, which mixes the strengths of <code>Quicksort</code>, <code>Heapsort</code> and <code>Insertion Sort</code> into a single algorithm to guarantee a worse case of O(n log n).</p>
+ <p>The idea behind Introsort is straightforward: First, if you have <b>less than 20 elements</b> in the partition being sorted, Insertion Sort is used. Although this algorithm has a worst case of O(n2), it also has a best case of O(n). Compared to the general O(n log n) algorithms, Insertion Sort will always perform better in small inputs.</p>
+ <p>If the array is not small, Quicksort will be used. This will bring our best case to O(n log n), but also maintain the worst case of O(n2). However, Introsort can avoid it -- if the recursion tree for Quicksort gets too deep, the partition switches to Heapsort. In this case, "too deep" is considered as <code>2 * floor(log2(array.count))</code>.</p>
+ <pre>
+<code>internal mutating func _introSortImpl(within range: Range&lt;Index&gt;,</code>
+<code>                                      by areInIncreasingOrder: (Element, Element) throws -&gt; Bool,</code>
+<code>                                      depthLimit: Int) rethrows {</code>
+<code>    // Insertion sort is better at handling smaller regions.</code>
+<code>    if distance(from: range.lowerBound, to: range.upperBound) &lt; 20 {</code>
+<code>        try _insertionSort(within: range, by: areInIncreasingOrder)</code>
+<code>    } else if depthLimit == 0 {</code>
+<code>        try _heapSort(within: range, by: areInIncreasingOrder)</code>
+<code>    } else {</code>
+<code>        // Partition and sort.</code>
+<code>        // We don't check the depthLimit variable for underflow because this</code>
+<code>        // variable is always greater than zero (see check above).</code>
+<code>        let partIdx = try _partition(within: range, by: areInIncreasingOrder)</code>
+<code>        try _introSortImpl(</code>
+<code>            within: range.lowerBound..&lt;partIdx,</code>
+<code>            by: areInIncreasingOrder,</code>
+<code>            depthLimit: depthLimit &amp;- 1)</code>
+<code>        try _introSortImpl(</code>
+<code>            within: partIdx..&lt;range.upperBound,</code>
+<code>            by: areInIncreasingOrder,</code>
+<code>            depthLimit: depthLimit &amp;- 1)</code>
+<code>    }</code>
+<code>}</code>
+</pre>
+ <p>Introsort greedily attempts to pick the best algorithm for the given situation, backing up to a different option when the previous choice goes wrong. It has a best case of O(n) and worst case of O(n log n), making it a decent one-size-fits-all algorithm.</p>
+ <p>In terms of memory usage, it will perform slightly worse than the usual sorting algorithm. Although the three algorithms can sort inplace, Introsort's implementation in Swift was recursive. Since Swift doesn't guarantee that tail recursion calls will be optimized, running the builtin <code>sort()</code> pre-Swift 5 was not the best option if keeping memory usage low was important.</p>
+ <p>The biggest thing to note is that Introsort was <b>unstable</b>. Although Insertion Sort is stable, the default implementation of Quicksort and Heapsort are not. If the order of equal elements was important, using <code>sort()</code> pre-Swift 5 was also not a good idea.</p>
+ <h2>After Swift 5 - Timsort</h2>
+ <p>Multiple threads surfaced between 2015 and 2018 about adding a stable sorting algorithm to Swift that didn't rely on recursion, but promising discussions first showed up only in the beginning of 2018. In October 2018, <a href="https://github.com/apple/swift/pull/19717">a pull request was finally merged</a> to change Introsort to a modified version of <b>Timsort.</b></p>
+ <p>Timsort is a hybrid algorithm like Introsort, but with different approaches. It works by dividing an array into smaller sections, sorting these smaller sections with Insertion Sort, and then merging these sections together with Merge Sort. Because both Insertion Sort and Mergesort are stable, Timsort is <b>stable</b>, and while it also has a worst case of O(n log n) and non-constant space complexity, it tends to be considerably quicker than the more naive algorithms in real world scenarios. The reason why Timsort can be so fast is that although the description sounds simple enough, in reality each of these steps are highly tuned for efficiency.</p>
+ <h3>Finding the next "run" (Partitioning)</h3>
+ <p>Instead of dividing everything first and merging as the last step like Mergesort, Timsort scans the array once and progressively merge these regions (called "runs") as they are found.</p>
+ <p>The beauty is that unlike Mergesort, a run isn't simply the array divided by half. Timsort abuses the fact that every array that you want to sort is likely to have a few contiguous subsequences that are <b>almost or already sorted</b>, which happens to be Insertion Sort's best case. To find the next run, Timsort will advance a pointer until the current sequence stops being an ascending/descending pattern:</p>
+ <pre>
+<code>[1, 2, 3, 1, 9, 6]</code>
+<code> i     j</code>
+</pre>
+ <p><i>Note: This example is just for visual purposes -- because the array here is small, Timsort would just Insertion Sort it right away.</i></p>
+ <p>The range from i to j defines our first run <b>run</b>, but the optimizations don't stop here.</p>
+ <p>First: If the sequence is descending, we can already sort it in linear time by reversing the elements.</p>
+ <p>Second: To increase the speed of Insertion Sort and to balance the amount of merge operations that will be done later, Timsort defines that every run should have a <b>minimum size</b> of a power of two between 16 and 128, or at least something very close to it. If the run that we found has a size smaller than the minimum run size, then the current run's range is expanded and sorted with Insertion Sort.</p>
+ <pre>
+<code>// Find the next consecutive run, reversing it if necessary.</code>
+<code>var (end, descending) = try _findNextRun(in: self, from: start, by: areInIncreasingOrder)</code>
+<code>if descending {</code>
+<code>    _reverse(within: start..&lt;end)</code>
+<code>}</code>
+<code></code>
+<code>// If the current run is shorter than the minimum length, use the</code>
+<code>// insertion sort to extend it.</code>
+<code>if end &lt; endIndex &amp;&amp; end - start &lt; minimumRunLength {</code>
+<code>    let newEnd = Swift.min(endIndex, start + minimumRunLength)</code>
+<code>    try _insertionSort(within: start..&lt;newEnd, sortedEnd: end, by: areInIncreasingOrder)</code>
+<code>    end = newEnd</code>
+<code>}</code>
+</pre>
+ <p>For the actual size, Swift specifically will pick a value between 32 and 64 that varies according to the size of the array. Finally, after a run is found, it's added to a stack containing all the other previous runs that we've found.</p>
+ <h3>Merging runs</h3>
+ <p>Every time a run is found, Timsort will attempt to collapse the top three runs of the stack into a single one by merging them together until the following conditions are satisfied:</p>
+ <pre>
+<code>runs.count &lt; 3 || runs[runs.count - 2].size &gt; (runs[runs.count - 1].size + runs.last!.count)</code>
+<code>&amp;&amp;</code>
+<code>runs.count &lt; 2 || runs[runs.count - 1].size &gt; runs.last!.size</code>
+</pre>
+ <p>This is done to reduce the amount of runs we have to remember, but mainly to balance the overall size of the runs as having them close together is beneficial for Timsort's merging phase.</p>
+ <p>At first glance Timsort's merging phase works just like Mergesort: we compare a pair of elements from each array, picking the smallest one and moving it to its proper position in the final array.</p>
+ <p>However, Timsort beautifully empowers the fact that if one specific array keeps "winning" the comparison, then it's likely to keep doing so. If this happens, instead of continuing to compare elements, we can simply binary search for the correct position of the element from the "losing" array in the "winning" one, moving all elements before it to the final array. This is called <b>galloping</b> and it saves us a lot of time by letting us skip comparing an entire chunk of the winning array.</p>
+ <p>The galloping process can be aborted if the binary search process "loses" to the regular comparison process. <a href="https://bugs.python.org/file4451/timsort.txt">You can see all the optimizations that are done in the Timsort description.</a> Finally, after all runs were found, the remaining runs in the stack are progressively merged together until the entire array is sorted.</p>
+ <p>The major differences in Swift is that the compiler's implementation of Timsort doesn't use galloping, and it attempts to collapse runs based on the last four runs instead of the last three. Still, it outperforms Introsort in pretty much every scenario.</p>
+ <h2>Conclusion</h2>
+ <div class="sponsor-article-ad-auto hidden"></div>
+ <p>Timsort is one of the fastest sorting algorithms for real world problems. Knowing what algorithm your language uses can help you optimize your code by making better decisions based on what data you're handling.</p>
+ <p>Follow me on my Twitter (<a href="https://twitter.com/rockbruno_">@rockbruno_</a>), and let me know of any suggestions and corrections you want to share.</p>
+ <h2>References and Good reads</h2>
+ <a href="https://forums.swift.org/t/starter-proposal-add-stable-sort-to-stdlib/9309">Stable Sort Proposal</a>
+ <br>
+ <a href="https://github.com/apple/swift/pull/19717">Stable Sort PR</a>
+ <br>
+ <a href="https://en.wikipedia.org/wiki/Introsort">Introsort</a>
+ <br>
+ <a href="https://svn.python.org/projects/python/trunk/Objects/listsort.txt">Timsort</a>
+ <br>
+ <a href="https://en.wikipedia.org/wiki/Timsort">Timsort (Wiki)</a>
+</div>]]></description>
+</item>
+<item>
+    <title>iOS Security: Reverse Engineering Messenger's Chat Bubbles</title>
+    <link>https://rockbruno.com/reverse-engineering-ios-facebook-messenger-chat</link>
+    <guid>https://rockbruno.com/reverse-engineering-ios-facebook-messenger-chat</guid>
+    <pubDate>Mon, 7 Nov 2016 11:42:07 GMT-2</pubDate>
+<description><![CDATA[
+ 
+  
+  <!--WRITEIT_POST_NAME=iOS Security: Reverse Engineering Messenger's Chat Bubbles--> 
+  <!--WRITEIT_POST_HTML_NAME=reverse-engineering-ios-facebook-messenger-chat--> 
+  <!--WRITEIT_POST_SITEMAP_DATE_LAST_MOD=2020-04-12T14:00:00+02:00--> 
+  <!--WRITEIT_POST_SITEMAP_DATE=2016-11-07T13:42:07+00:00--> 
+  <!--Add here the additional properties that you want each page to possess.--> 
+  <!--These properties can be used to change content in the template page or in the page itself as shown here.--> 
+  <!--Properties must start with 'WRITE_IT_POST'.--> 
+  <!--Writeit provides and injects WRITEIT_POST_NAME and WRITEIT_POST_HTML_NAME by default.--> 
+  <!--WRITEIT_POST_SHORT_DESCRIPTION=Due do the messaging nature of the Objective-C runtime, a great amount of information about your code can be extracted and manipulated during runtime by external tools.--> 
+  <title>iOS Security: Reverse Engineering Messenger's Chat Bubbles</title>  
+ 
+
+<div class="blog-post"> 
+ <div class="post-title-index">  
+  <h1>iOS Security: Reverse Engineering Messenger's Chat Bubbles</h1>
+ </div> 
+ <div class="post-info"> 
+  <div class="category category-reverse">Reverse Engineering</div>
+  <div class="post-info-text">
+   Published on 07 Nov 2016 
+  </div> 
+ </div>  
+ <blockquote class="margin-top-40 margin-bottom-40"> 
+  <p>This article is SwiftRocks's slimmed down version of my original <a href="https://medium.com/@brunorochaesilva/how-i-hacked-messengers-ios-app-custom-chat-bubble-colors-12f1ac7f070c">2016 Medium article.</a> The Medium article is badly written and contains mistakes, but it has more information on how to reproduce each step.</p> 
+  <div class="sponsor-article-ad-auto hidden"></div> 
+  <p>Update: As of May 3, 2018, this sadly doesn't seem to work anymore. My web chats returned to the blue color and the custom changes only apply locally. I guess color changes are validated on the backend now. Damn you Zuckerberg!</p> 
+ </blockquote>
+ <p>Due do the messaging nature of the Objective-C runtime, a great amount of information about your code can be extracted and manipulated during runtime by external tools. The <b>Selectors</b> you reference everyday are nothing more than exposed strings in your code, despite what Swift's <b>#selector</b> abstraction might imply. With the right tools, any production app can be messed with just like it's Xcode debugging counterpart.</p>
+ <p>Facebook's Messenger app is an interesting app to test this kind of concept. It contains many minigames and features that change the app's layout globally - as in, they are not client side changes, everyone can see what you do both in the app and the website. These features contain zero security measures, after all, it's not like you can cause damage with them. That makes them great targets for learning iOS security concepts.</p>
+ <div class="post-image margin-top-40 margin-bottom-40"> 
+  <img src="https://i.imgur.com/QoQW4zL.jpg" alt=""> 
+ </div>
+ <p>The feature I'll inspect in this article is the chat bubble color selector. It allows you to change the color of a chat (duh) to a few pre-determined colors. But what if I want to use my own custom color instead?</p>
+ <p><a href="http://www.cycript.org/">Cycript</a> is a debugger with a twist: you can easily print, create and call Objective-C methods without any of the complexity or pain you might experience while using <b>gdb or lldb</b>. Combined with a jailbroken iPad with OpenSSH installed, you can treat app like it's source code was available right in front of you.</p>
+ <pre class="command-line language-bash" data-host="MyiPad" , data-prompt="cy#" data-output="1-2"><code>ssh root@192.168.1.103
+cycript -p Messenger
+var root = [UIApplication sharedApplication].keyWindow.rootViewController 
+MNModalHostViewController</code></pre>
+ <p>The iPad currently has the color selection action sheet opened. If Facebook's engineers are good with naming conventions, this means that following down <b>root</b>'s hierarchy will eventually lead us to a view whose's name might contain some combination of the the words "Color", "Selector", "Chat" and "Bubble". In Cycript, you can see a view's properties by putting a <b>*</b> before it.</p>
+ <div class="post-image margin-top-40 margin-bottom-40"> 
+  <img src="https://i.imgur.com/u4Ne4KF.png" alt=""> 
+  <p>The second item of the <b>childViewControllers</b> array is a <b>MNActionSheetViewController</b>. The color selection screen is the only thing opened on the iPad, so that must be it.</p> 
+ </div>
+ <div class="post-image margin-top-40 margin-bottom-40"> 
+  <img src="https://i.imgur.com/546IYgV.png" alt=""> 
+  <p>The actionSheet's (created with <b>var actionSheet = root.childViewControllers[1]</b>) childViewController is a <b>MNThreadCustomizationPickerViewController</b>. No idea what it means, but the name is promising.</p> 
+ </div>
+ <div class="post-image margin-top-40 margin-bottom-40"> 
+  <img src="https://i.imgur.com/x6jr7pT.png" alt=""> 
+  <p>The PickerViewController contains an internal <b>pickerView</b>, as expected. There are two here, but (spoilers) the right one is the <b>FBPickerView</b>.</p> 
+ </div>
+ <div class="post-image margin-top-40 margin-bottom-40"> 
+  <img src="https://i.imgur.com/Ww6NlIS.png" alt=""> 
+  <p>The pickerView contains a lookup table with 15 elements (we have 15 colors), which is how I suppose they know which colors to show in the action sheet. It also contains a collectionView. In this case, the easier way to manipulate the colors ended up accessing the cells directly.</p> 
+ </div>
+ <div class="post-image margin-top-40 margin-bottom-40"> 
+  <img src="https://i.imgur.com/B1mdxu9.png" alt=""> 
+  <p>As expected, the collectionView contains 15 cells.</p> 
+ </div>
+ <div class="post-image margin-top-40 margin-bottom-40"> 
+  <img src="https://i.imgur.com/uNVBUVq.png" alt=""> 
+  <p>Here, I picked a random cell (calling it blueCell). It seems that each cell has a <b>button (FBPickerViewButton)</b> property.</p> 
+ </div>
+ <div class="post-image margin-top-40 margin-bottom-40"> 
+  <img src="https://i.imgur.com/iTblMYO.png" alt=""> 
+  <p>And each FBPickerViewButton contains an <b>item (FBPickerViewItem)</b></p> 
+ </div>
+ <p>Unfortunately, it turns out that a FBPickerViewItem's properties don't contain anything useful involving chat colors. The actual color information ended up being in it's <b>init</b> method.</p>
+ <p>Let's pretend I didn't know that. To print a class's methods, we can use of the following snippet:</p>
+ <pre class="language-js"><code>function printMethods(className) {
+    var count = new new Type(“I”);
+    var methodsArray = []; 
+    for(var i = 0; i &lt; *count; i++) {
+        var method = methods[i];
+        methodsArray.push({selector:method_getName(method)});
+    }
+    free(methods);
+    return methodsArray;
+}</code></pre>
+ <div class="post-image margin-top-40 margin-bottom-40"> 
+  <img src="https://i.imgur.com/dGGjDkV.png" alt=""> 
+  <p>The result of calling <b>printMethods("FBPickerViewItem")</b>. There it is!</p> 
+ </div>
+ <p>In order to intercept the initialization of this class, we can use <a href="http://nshipster.com/method-swizzling/">Method Swizzling</a>. Cydia Substrate can be installed on a jailbroken device to provide helpers specific for this purpose.</p>
+ <pre class="language-js"><code>@import com.saurik.substrate.MS 
+var _setColor_pointer = {};
+MS.hookMessage(FBPickerItem, @selector(initWithColor:accessibilityTitle:accessibilityHint:isSelected:isSelectable:), function(arg0) { 
+    return _setColor_pointer-&gt;call(this,[UIColor blackColor],”a”,”b”,false,true);
+}, _setColor_pointer);</code></pre>
+ <p>Basically, our swizzled method calls the original implementation, but with other arguments. In this case, I force the color to be black. If I close the action sheet and open it again, the result is...</p>
+ <div class="post-image margin-top-40 margin-bottom-40"> 
+  <img src="https://i.imgur.com/IWIRUiy.jpg" alt=""> 
+  <p>The colors changed, but will it actually work?</p> 
+ </div>
+ <div class="post-image margin-top-40 margin-bottom-40"> 
+  <img src="https://i.imgur.com/Ow2DDZu.png" alt=""> 
+  <p>It works locally, but will it work if I open Messenger somewhere else?</p> 
+ </div>
+ <div class="post-image margin-top-40 margin-bottom-40"> 
+  <img src="https://i.imgur.com/0W3zbIH.png" alt=""> 
+  <div class="sponsor-article-ad-auto hidden"></div> 
+  <p>Yes! If they have analytic events for these colors, someone at Facebook will be very confused trying to figure out why there's some random guy with a black chat.</p> 
+ </div>
+ <p>Hopefully this can give you an idea of how easily your app's data can be tampered it. Be careful with what's inside your binary - no matter how hard you try to hide it, someone who tries hard enough will eventually find it - specially if they are being paid to screw you up. Do not try to reinvent the wheel, use actual, market proven security measures.</p>
+</div>]]></description>
+</item>
+</channel></rss>

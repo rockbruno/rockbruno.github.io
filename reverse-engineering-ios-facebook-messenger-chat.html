@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+
+    <script src="https://use.fontawesome.com/afd448ce82.js"></script>
+    
+    <!-- Meta Tag -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    
+    <!-- SEO -->
+    <meta name="author" content="Bruno Rocha">
+    <meta name="keywords" content="Software, Hardware, Tech, Articles, Tutorials, Apple">
+    <meta name="description" content="Due do the messaging nature of the Objective-C runtime, a great amount of information about your code can be extracted and manipulated during runtime by external tools.">
+    <meta name="title" content="iOS Security: Reverse Engineering Messenger's Chat Bubbles">
+    <meta name="url" content="https://rockbruno.com/reverse-engineering-ios-facebook-messenger-chat">
+    <meta name="image" content="https://rockbruno.com/images/thumb.jpg">
+    <meta name="copyright" content="Bruno Rocha">
+    <meta name="robots" content="index,follow">
+
+    <meta property="og:title" content="iOS Security: Reverse Engineering Messenger's Chat Bubbles"/>
+    <meta property="og:image" content="https://rockbruno.com/images/thumb.jpg"/>
+    <meta property="og:description" content="Due do the messaging nature of the Objective-C runtime, a great amount of information about your code can be extracted and manipulated during runtime by external tools."/>
+    <meta property="og:type" content="website"/>
+    <meta property="og:url" content="https://rockbruno.com/reverse-engineering-ios-facebook-messenger-chat"/>
+
+    <meta name="twitter:card" content="summary_large_image"/>
+    <meta name="twitter:image" content="https://rockbruno.com/images/thumb.jpg"/>
+    <meta name="twitter:image:alt" content="Page Thumbnail"/>
+    <meta name="twitter:title" content="iOS Security: Reverse Engineering Messenger's Chat Bubbles"/>
+    <meta name="twitter:description" content="Due do the messaging nature of the Objective-C runtime, a great amount of information about your code can be extracted and manipulated during runtime by external tools."/>
+    <meta name="twitter:site" content="@rockbruno_"/>
+    
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="images/favicon/favicon-2.ico">
+    <link rel="mask-icon" href="images/favicon/favicon-2.ico">
+    <link rel="apple-touch-icon" href="images/favicon/apple-touch-icon.png">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:light,lightitalic,regular,regularitalic,medium,mediumitalic,bold,bolditalic,black,blackitalic">
+    
+  <!-- Prism CSS Stylesheet --> 
+  <link rel="stylesheet" type="text/css" href="css/prism3.css"> 
+  <!-- Main CSS Stylesheet --> 
+  <link rel="stylesheet" type="text/css" href="css/style42.css">
+
+  </head>
+
+ <body>
+      
+    
+    
+     
+    
+    
+  <div class="main">
+    <div class="header padded">
+      <h1>Bruno Rocha</h1>
+      <p class="header-text">on Software Engineering & Electronics</p>
+      <div class="header-sections">
+        <a href="https://rockbruno.com">ARTICLES</a>
+        <text>/</text>
+        <a href="projects">PROJECTS</a>
+        <text>/</text>
+        <a href="talks">TALKS</a>
+      </div>
+    </div>
+    <div class="separator">
+      <div class="blog-header-button-container padded">
+        <div class="blog-header-button">
+             <a href="https://twitter.com/rockbruno_" target="_blank" style="display: flex;">
+                <i class="fa fa-twitter"></i>
+             </a>
+        </div>
+        <div class="blog-header-button">
+             <a href="rss.xml" target="_blank">
+                <i class="fa fa-rss"></i>
+             </a>
+        </div>
+        <div class="blog-header-button">
+             <a href="mailto:rockbruno@rockbruno.com" target="_blank">
+                <i class="fa fa-envelope"></i>
+             </a>
+        </div>
+        <div class="blog-header-button">
+             <a href="https://github.com/rockbruno" target="_blank">
+                <i class="fa fa-github"></i>
+             </a>
+        </div>
+          <div class="blog-header-button">
+           <a href="https://www.linkedin.com/in/bruno-rocha-45786a98/" target="_blank">
+              <i class="fa fa-linkedin"></i>
+           </a>
+        </div>
+      </div>
+    </div>
+    <div class="content padded" id="WRITEIT_DYNAMIC_CONTENT">
+ 
+  
+  <!--WRITEIT_POST_NAME=iOS Security: Reverse Engineering Messenger's Chat Bubbles--> 
+  <!--WRITEIT_POST_HTML_NAME=reverse-engineering-ios-facebook-messenger-chat--> 
+  <!--WRITEIT_POST_SITEMAP_DATE_LAST_MOD=2020-04-12T14:00:00+02:00--> 
+  <!--WRITEIT_POST_SITEMAP_DATE=2016-11-07T13:42:07+00:00--> 
+  <!--Add here the additional properties that you want each page to possess.--> 
+  <!--These properties can be used to change content in the template page or in the page itself as shown here.--> 
+  <!--Properties must start with 'WRITE_IT_POST'.--> 
+  <!--Writeit provides and injects WRITEIT_POST_NAME and WRITEIT_POST_HTML_NAME by default.--> 
+  <!--WRITEIT_POST_SHORT_DESCRIPTION=Due do the messaging nature of the Objective-C runtime, a great amount of information about your code can be extracted and manipulated during runtime by external tools.--> 
+  <title>iOS Security: Reverse Engineering Messenger's Chat Bubbles</title>  
+ 
+
+<div class="blog-post"> 
+ <div class="post-title-index">  
+  <h1>iOS Security: Reverse Engineering Messenger's Chat Bubbles</h1>
+ </div> 
+ <div class="post-info"> 
+  <div class="category category-reverse">Reverse Engineering</div>
+  <div class="post-info-text">
+   Published on 07 Nov 2016 
+  </div> 
+ </div>  
+ <blockquote class="margin-top-40 margin-bottom-40"> 
+  <p>This article is SwiftRocks's slimmed down version of my original <a href="https://medium.com/@brunorochaesilva/how-i-hacked-messengers-ios-app-custom-chat-bubble-colors-12f1ac7f070c">2016 Medium article.</a> The Medium article is badly written and contains mistakes, but it has more information on how to reproduce each step.</p> 
+  <div class="sponsor-article-ad-auto hidden"></div> 
+  <p>Update: As of May 3, 2018, this sadly doesn't seem to work anymore. My web chats returned to the blue color and the custom changes only apply locally. I guess color changes are validated on the backend now. Damn you Zuckerberg!</p> 
+ </blockquote>
+ <p>Due do the messaging nature of the Objective-C runtime, a great amount of information about your code can be extracted and manipulated during runtime by external tools. The <b>Selectors</b> you reference everyday are nothing more than exposed strings in your code, despite what Swift's <b>#selector</b> abstraction might imply. With the right tools, any production app can be messed with just like it's Xcode debugging counterpart.</p>
+ <p>Facebook's Messenger app is an interesting app to test this kind of concept. It contains many minigames and features that change the app's layout globally - as in, they are not client side changes, everyone can see what you do both in the app and the website. These features contain zero security measures, after all, it's not like you can cause damage with them. That makes them great targets for learning iOS security concepts.</p>
+ <div class="post-image margin-top-40 margin-bottom-40"> 
+  <img src="https://i.imgur.com/QoQW4zL.jpg" alt=""> 
+ </div>
+ <p>The feature I'll inspect in this article is the chat bubble color selector. It allows you to change the color of a chat (duh) to a few pre-determined colors. But what if I want to use my own custom color instead?</p>
+ <p><a href="http://www.cycript.org/">Cycript</a> is a debugger with a twist: you can easily print, create and call Objective-C methods without any of the complexity or pain you might experience while using <b>gdb or lldb</b>. Combined with a jailbroken iPad with OpenSSH installed, you can treat app like it's source code was available right in front of you.</p>
+ <pre class="command-line language-bash" data-host="MyiPad" , data-prompt="cy#" data-output="1-2"><code>ssh root@192.168.1.103
+cycript -p Messenger
+var root = [UIApplication sharedApplication].keyWindow.rootViewController 
+MNModalHostViewController</code></pre>
+ <p>The iPad currently has the color selection action sheet opened. If Facebook's engineers are good with naming conventions, this means that following down <b>root</b>'s hierarchy will eventually lead us to a view whose's name might contain some combination of the the words "Color", "Selector", "Chat" and "Bubble". In Cycript, you can see a view's properties by putting a <b>*</b> before it.</p>
+ <div class="post-image margin-top-40 margin-bottom-40"> 
+  <img src="https://i.imgur.com/u4Ne4KF.png" alt=""> 
+  <p>The second item of the <b>childViewControllers</b> array is a <b>MNActionSheetViewController</b>. The color selection screen is the only thing opened on the iPad, so that must be it.</p> 
+ </div>
+ <div class="post-image margin-top-40 margin-bottom-40"> 
+  <img src="https://i.imgur.com/546IYgV.png" alt=""> 
+  <p>The actionSheet's (created with <b>var actionSheet = root.childViewControllers[1]</b>) childViewController is a <b>MNThreadCustomizationPickerViewController</b>. No idea what it means, but the name is promising.</p> 
+ </div>
+ <div class="post-image margin-top-40 margin-bottom-40"> 
+  <img src="https://i.imgur.com/x6jr7pT.png" alt=""> 
+  <p>The PickerViewController contains an internal <b>pickerView</b>, as expected. There are two here, but (spoilers) the right one is the <b>FBPickerView</b>.</p> 
+ </div>
+ <div class="post-image margin-top-40 margin-bottom-40"> 
+  <img src="https://i.imgur.com/Ww6NlIS.png" alt=""> 
+  <p>The pickerView contains a lookup table with 15 elements (we have 15 colors), which is how I suppose they know which colors to show in the action sheet. It also contains a collectionView. In this case, the easier way to manipulate the colors ended up accessing the cells directly.</p> 
+ </div>
+ <div class="post-image margin-top-40 margin-bottom-40"> 
+  <img src="https://i.imgur.com/B1mdxu9.png" alt=""> 
+  <p>As expected, the collectionView contains 15 cells.</p> 
+ </div>
+ <div class="post-image margin-top-40 margin-bottom-40"> 
+  <img src="https://i.imgur.com/uNVBUVq.png" alt=""> 
+  <p>Here, I picked a random cell (calling it blueCell). It seems that each cell has a <b>button (FBPickerViewButton)</b> property.</p> 
+ </div>
+ <div class="post-image margin-top-40 margin-bottom-40"> 
+  <img src="https://i.imgur.com/iTblMYO.png" alt=""> 
+  <p>And each FBPickerViewButton contains an <b>item (FBPickerViewItem)</b></p> 
+ </div>
+ <p>Unfortunately, it turns out that a FBPickerViewItem's properties don't contain anything useful involving chat colors. The actual color information ended up being in it's <b>init</b> method.</p>
+ <p>Let's pretend I didn't know that. To print a class's methods, we can use of the following snippet:</p>
+ <pre class="language-js"><code>function printMethods(className) {
+    var count = new new Type(“I”);
+    var methodsArray = []; 
+    for(var i = 0; i &lt; *count; i++) {
+        var method = methods[i];
+        methodsArray.push({selector:method_getName(method)});
+    }
+    free(methods);
+    return methodsArray;
+}</code></pre>
+ <div class="post-image margin-top-40 margin-bottom-40"> 
+  <img src="https://i.imgur.com/dGGjDkV.png" alt=""> 
+  <p>The result of calling <b>printMethods("FBPickerViewItem")</b>. There it is!</p> 
+ </div>
+ <p>In order to intercept the initialization of this class, we can use <a href="http://nshipster.com/method-swizzling/">Method Swizzling</a>. Cydia Substrate can be installed on a jailbroken device to provide helpers specific for this purpose.</p>
+ <pre class="language-js"><code>@import com.saurik.substrate.MS 
+var _setColor_pointer = {};
+MS.hookMessage(FBPickerItem, @selector(initWithColor:accessibilityTitle:accessibilityHint:isSelected:isSelectable:), function(arg0) { 
+    return _setColor_pointer-&gt;call(this,[UIColor blackColor],”a”,”b”,false,true);
+}, _setColor_pointer);</code></pre>
+ <p>Basically, our swizzled method calls the original implementation, but with other arguments. In this case, I force the color to be black. If I close the action sheet and open it again, the result is...</p>
+ <div class="post-image margin-top-40 margin-bottom-40"> 
+  <img src="https://i.imgur.com/IWIRUiy.jpg" alt=""> 
+  <p>The colors changed, but will it actually work?</p> 
+ </div>
+ <div class="post-image margin-top-40 margin-bottom-40"> 
+  <img src="https://i.imgur.com/Ow2DDZu.png" alt=""> 
+  <p>It works locally, but will it work if I open Messenger somewhere else?</p> 
+ </div>
+ <div class="post-image margin-top-40 margin-bottom-40"> 
+  <img src="https://i.imgur.com/0W3zbIH.png" alt=""> 
+  <div class="sponsor-article-ad-auto hidden"></div> 
+  <p>Yes! If they have analytic events for these colors, someone at Facebook will be very confused trying to figure out why there's some random guy with a black chat.</p> 
+ </div>
+ <p>Hopefully this can give you an idea of how easily your app's data can be tampered it. Be careful with what's inside your binary - no matter how hard you try to hide it, someone who tries hard enough will eventually find it - specially if they are being paid to screw you up. Do not try to reinvent the wheel, use actual, market proven security measures.</p>
+</div></div>
+  </div>             
+
+    <!-- All Javascript Plugins  -->
+  <script type="text/javascript" src="js/jquery.min.js"></script> 
+  <script type="text/javascript" src="js/prism3.js"></script> 
+    <!-- Main Javascript File  -->
+    <script type="text/javascript" src="js/scripts25.js"></script>
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-RPRS5GLTLD"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-RPRS5GLTLD');
+</script>
+
+   </body>
+ </html>

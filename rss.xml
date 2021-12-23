@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+<channel>
+    <title>SwiftRocks</title>
+    <description>SwiftRocks is a blog about how Swift works and general iOS tips and tricks.</description>
+    <language>en-us</language>
+    <copyright>2019 Bruno Rocha</copyright>
+    <link>https://swiftrocks.com</link>
+    <atom:link href="https://swiftrocks.com/rss.xml" rel="self" type="application/rss+xml"/></channel></rss>

@@ -1,0 +1,412 @@
+html {
+  scroll-behavior: unset !important;
+}
+
+body {
+  background: #31323a;
+  --text-color: #D8D8D8;
+  --bold-color: #A7EE86;
+  --link-color: #EFA453;
+  --detail-color: #afafaf;
+  --strong-color: #A7EE86;
+  font-family: "Source Sans Pro", sans-serif;
+  overflow-wrap: break-word;
+}
+
+.hidden {
+  display:none;
+  background-color: rgba(0, 0, 0, 0);
+}
+
+.main {
+  max-width: 750px;
+  margin: auto;
+  background: #23242b;
+  border-radius: 15px;
+}
+
+.padded {
+  padding-left: 32px;
+  padding-right: 32px;
+}
+
+.header {
+  padding-top: 16px;
+}
+
+.header h1 {
+    color: var(--bold-color);
+    font-size: 70px;
+    font-weight: 600;
+    margin: 0;
+}
+
+.header p {
+    color: var(--text-color);
+    margin-top: -8px;
+}
+
+.separator {
+  background-color: #8152D8;
+  width: 100%;
+  height: 53px;
+  margin-top: 32px;
+}
+
+.header-sections {
+  display: flex;
+  gap: 12px;
+}
+
+.header-sections a {
+  color: var(--text-color);
+  font-size: 24px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.header-sections text {
+  color: var(--text-color);
+  font-size: 24px;
+  font-weight: 600;
+}
+
+.content {
+  padding-bottom: 32px;
+}
+
+.blog-header-button-container {
+  margin-top: -8px;
+  margin-left: -16px; 
+  display: flex; 
+  justify-content: right; 
+  flex-flow: row wrap;
+}
+
+.blog-header-button {
+  display: flex;
+  align-items: center;
+  margin-top: 8px;
+}
+
+.blog-header-button a {
+  color: var(--text-color);
+  margin-right: 4px;
+  transition: 0.25s;
+  background-color: unset;
+  padding-left: 18px;
+  padding-right: 18px;
+  padding-bottom: 12px;
+  font-size: 33px;
+  text-decoration: none;
+}
+
+.blog-header-button a:hover {
+  color: var(--link-color);
+  transition: 0.25s;
+}
+
+.blog-header-button-sponsor {
+  height: 33px;
+  line-height: 33px;
+  background-color: white;
+  color: var(--strong-color);
+  font-size: 14px;
+  padding-left: 10px;
+  padding-right: 10px;
+  border-radius: 5px;
+  transition: 0.25s;
+  font-weight: 400;
+  z-index: 2;
+}
+
+.blog-header-button a:hover > .blog-header-button-sponsor {
+  color: var(--link-color);
+  color: white;
+  transition: 0.25s;
+}
+
+a {
+    color: var(--link-color);
+    text-decoration: underline;
+}
+
+ul {
+  color: var(--text-color);
+}
+
+a:hover,
+a:focus,
+a:active {
+    outline: none;
+    color: var(--link-color);
+}
+
+b {
+    font-weight: bold;
+    color: var(--bold-color);
+}
+
+@media (max-width: 500px) {
+    .blog-header-button-follow-verbose {
+        display: none;
+    }
+    .blog-header-text {
+        font-size: 13px;
+    }
+    .blog-header-button a {
+      padding-left: 6px;
+      padding-right: 6px;
+    }
+}
+
+.post-title-index a {
+    color: var(--link-color);
+    font-size: 39px;
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.post-title-index h1 {
+    margin-bottom: 5px !important;
+    margin-top: 20px;
+}
+
+.post-info {
+  display: flex;
+  font-size: 11px;
+  margin-top: 8px;
+  margin-bottom: 24px;
+  color: var(--text-color);
+}
+
+.post-info-text {
+  line-height: 28px;
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--detail-color);
+}
+
+.category {
+    border-radius: 4px;
+    font-size: 14px;
+    padding-left: 12px;
+    padding-right: 12px;
+    padding-top: 4px;
+    padding-bottom: 4px;
+    font-weight: 500;
+    margin-right: 8px;
+}
+
+.category-swift {
+    background-color: var(--strong-color);
+    color: white;
+}
+
+.category-compiler {
+    background-color: #0089ff;
+    color: white;
+}
+
+.category-ios {
+    background-color: #4e4e4e;
+    color: white;
+}
+
+.category-reverse {
+    background-color: #8152D8;
+    color: white;
+}
+
+.category-software {
+    background-color: #749D69;
+    color: white;
+}
+
+.category-electronics {
+    background-color: #f93c5d;
+    color: white;
+}
+
+.blog-post {
+    margin-top: 32px;
+}
+
+.blog-post p {
+  color: var(--text-color);
+  font-size: 17px;
+}
+
+h1 {
+    color: var(--bold-color);
+    font-size: 39px;
+    font-weight: 700;
+}
+
+h2 {
+    color: var(--text-color);
+    font-size: 30px;
+    font-weight: 600;
+}
+
+h3 {
+    color: var(--text-color);
+    font-size: 23px;
+    font-weight: 600;
+}
+
+code {
+    padding-left: 6px !important;
+    padding-right: 6px !important;
+    color: white;
+    background-color: #282823;
+    font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
+}
+
+.blog-post pre {
+    margin-top: 18px !important;
+    margin-bottom: 18px !important;
+}
+
+blockquote {
+    color: var(--text-color);
+    border-left: 5px solid var(--strong-color);
+    padding: 10px 20px;
+    margin: 0 0 20px;
+    font-size: 17.5px;
+}
+
+.footer-share {
+  margin-top: 16px;
+}
+
+.footer-share i {
+  background-color: var(--strong-color);
+  color: white;
+  padding: 8px;
+  font-size: 20x;
+  border-radius: 8px;
+  transition: 0.25s;
+}
+
+.footer-share a {
+  text-decoration: none;
+  color: var(--strong-color);
+  font-size: 18px;
+  font-weight: bold;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  border-radius: 4px;
+  transition: 0.25s;
+}
+
+.footer-share a:hover {
+  color: black;
+  transition: 0.25s;
+}
+
+.footer-share a:hover > i {
+  background-color: black;
+  transition: 0.25s;
+}
+
+.copyright {
+    justify-content: center;
+    display: flex;
+    margin-top: 32px;
+    margin-bottom: 32px;
+    padding-top: 32px;
+    flex-direction: column;
+    align-items: center;
+}
+
+.copyright text {
+  font-size: 16px;
+  color: #6d6d6d;
+}
+
+/* MailChimp Form Embed Code - Horizontal Super Slim - 12/16/2015 v10.7
+Adapted from: http://blog.heyimcat.com/universal-signup-form/ */
+
+#mc_embed_signup form {text-align:center; padding:10px 0 10px 0;}
+.mc-field-group { display: inline-block; } /* positions input field horizontally */
+#mc_embed_signup input.email {font-size: 15px; border: 1px solid #ABB0B2;  -webkit-border-radius: 3px; -moz-border-radius: 3px; border-radius: 3px; color: #343434; background-color: #fff; box-sizing:border-box; height:32px; padding: 0px 0.4em; display: inline-block; margin: 0; width:350px; vertical-align:top;}
+#mc_embed_signup label {display:block; font-size:16px; padding-bottom:10px; font-weight:bold;}
+#mc_embed_signup .clear {display: inline-block;} /* positions button horizontally in line with input */
+#mc_embed_signup .button {font-size: 13px; border: none; -webkit-border-radius: 3px; -moz-border-radius: 3px; border-radius: 3px; letter-spacing: .03em; color: #fff; background-color: var(--strong-color); box-sizing:border-box; height:32px; line-height:32px; padding:0 18px; display: inline-block; margin: 0; transition: all 0.23s ease-in-out 0s;}
+#mc_embed_signup .button:hover {background-color:black; cursor:pointer;}
+#mc_embed_signup div#mce-responses {float:left; top:-1.4em; padding:0em .5em 0em .5em; overflow:hidden; width:90%;margin: 0 5%; clear: both;}
+#mc_embed_signup div.response {margin:1em 0; padding:1em .5em .5em 0; font-weight:bold; float:left; top:-1.5em; z-index:1; width:80%;}
+#mc_embed_signup #mce-error-response {display:none;}
+#mc_embed_signup #mce-success-response {color:#529214; display:none;}
+#mc_embed_signup label.error {display:block; float:none; width:auto; margin-left:1.05em; text-align:left; padding:.5em 0;}
+#mc_embed_signup { margin-top: 32px; }
+@media (max-width: 768px) {
+    #mc_embed_signup input.email {width:100%; margin-bottom:5px;}
+    #mc_embed_signup .clear {display: block; width: 100% }
+    #mc_embed_signup .button {width: 100%; margin:0; }
+}
+
+/*      */
+
+button {
+    background-color: transparent;
+}
+
+.button {
+    font-size: 16px;
+}
+
+.footer strong {
+    color: var(--text-color);
+    font-size: 28px;
+    font-weight: 400;
+    margin-bottom: 5px !important;
+    line-height: 1.1;
+    font-family: inherit;
+    display: block;
+    margin-top: 8px;
+}
+
+.footer h3 {
+  margin-bottom: 4px !important;
+}
+
+.blog-post .post-image {
+    margin-top: 40px !important;
+    margin-bottom: 40px !important;
+    text-align: center;
+}
+
+.blog-post .post-image img {
+    max-width: 100%;
+    width: auto;
+    height: auto;
+}
+
+.blog-post .post-image p {
+    text-align: center;
+    font-size: 14px;
+    margin-top: 10px;
+}
+
+.blog-post .post-image a {
+    font-weight: 600;
+}
+
+p {
+    font-size: 15px;
+    color: var(--text-color);
+}
+
+.footer p {
+    color: var(--detail-color);
+}
+
+.syntaxhighlighter {
+    overflow: hidden;
+}
+
+.syntaxhighlighter .toolbar .item.printSource {
+    display: none !important;
+}

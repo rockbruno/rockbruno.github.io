@@ -5,32 +5,32 @@
       xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
             http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
 <url>
-    <loc>https://swiftrocks.com/talks</loc>
+    <loc>https://rockbruno.com/talks</loc>
     <lastmod>2022-01-03T14:00:00+02:00</lastmod>
     <priority>0.80</priority>
 </url>
 <url>
-    <loc>https://swiftrocks.com/talks.html</loc>
+    <loc>https://rockbruno.com/talks.html</loc>
     <lastmod>2022-01-03T14:00:00+02:00</lastmod>
     <priority>0.80</priority>
 </url>
 <url>
-    <loc>https://swiftrocks.com/projects</loc>
+    <loc>https://rockbruno.com/projects</loc>
     <lastmod>2022-01-03T14:00:00+02:00</lastmod>
     <priority>0.80</priority>
 </url>
 <url>
-    <loc>https://swiftrocks.com/projects.html</loc>
+    <loc>https://rockbruno.com/projects.html</loc>
     <lastmod>2022-01-03T14:00:00+02:00</lastmod>
     <priority>0.80</priority>
 </url>
 <url>
-    <loc>https://swiftrocks.com/index</loc>
+    <loc>https://rockbruno.com/index</loc>
     <lastmod>2022-01-03T14:00:00+02:00</lastmod>
     <priority>0.80</priority>
 </url>
 <url>
-    <loc>https://swiftrocks.com/index.html</loc>
+    <loc>https://rockbruno.com/index.html</loc>
     <lastmod>2022-01-03T14:00:00+02:00</lastmod>
     <priority>0.80</priority>
 </url>

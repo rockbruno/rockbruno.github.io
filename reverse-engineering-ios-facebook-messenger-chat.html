@@ -120,8 +120,6 @@
   </div> 
  </div>  
  <blockquote class="margin-top-40 margin-bottom-40"> 
-  <p>This article is SwiftRocks's slimmed down version of my original <a href="https://medium.com/@brunorochaesilva/how-i-hacked-messengers-ios-app-custom-chat-bubble-colors-12f1ac7f070c">2016 Medium article.</a> The Medium article is badly written and contains mistakes, but it has more information on how to reproduce each step.</p> 
-  <div class="sponsor-article-ad-auto hidden"></div> 
   <p>Update: As of May 3, 2018, this sadly doesn't seem to work anymore. My web chats returned to the blue color and the custom changes only apply locally. I guess color changes are validated on the backend now. Damn you Zuckerberg!</p> 
  </blockquote>
  <p>Due do the messaging nature of the Objective-C runtime, a great amount of information about your code can be extracted and manipulated during runtime by external tools. The <b>Selectors</b> you reference everyday are nothing more than exposed strings in your code, despite what Swift's <b>#selector</b> abstraction might imply. With the right tools, any production app can be messed with just like it's Xcode debugging counterpart.</p>
@@ -200,7 +198,7 @@ MS.hookMessage(FBPickerItem, @selector(initWithColor:accessibilityTitle:accessib
   <div class="sponsor-article-ad-auto hidden"></div> 
   <p>Yes! If they have analytic events for these colors, someone at Facebook will be very confused trying to figure out why there's some random guy with a black chat.</p> 
  </div>
- <p>Hopefully this can give you an idea of how easily your app's data can be tampered it. Be careful with what's inside your binary - no matter how hard you try to hide it, someone who tries hard enough will eventually find it - specially if they are being paid to screw you up. Do not try to reinvent the wheel, use actual, market proven security measures.</p>
+ <p>Hopefully this can give you an idea of how easily your app's data can be tampered with. Be careful with what's inside your binary - no matter how hard you try to hide it, someone who tries hard enough will eventually find it - specially if they are being paid to screw you up. Do not try to reinvent the wheel, use actual, market proven security measures.</p>
 </div></div>
   </div>             
 

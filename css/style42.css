@@ -237,6 +237,15 @@ b {
   font-size: 17px;
 }
 
+.blog-post li {
+  color: var(--text-color);
+  font-size: 17px;
+}
+
+.blog-post a {
+  font-size: 17px;
+}
+
 h1 {
     color: var(--bold-color);
     font-size: 39px;

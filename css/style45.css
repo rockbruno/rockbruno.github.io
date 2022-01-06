@@ -5,8 +5,8 @@ html {
 body {
   background: #31323a;
   --text-color: #D8D8D8;
-  --bold-color: #A7EE86;
-  --link-color: #EFA453;
+  --bold-color: #EFA453;
+  --link-color: #A7EE86;
   --detail-color: #afafaf;
   --strong-color: #A7EE86;
   font-family: "Source Sans Pro", sans-serif;

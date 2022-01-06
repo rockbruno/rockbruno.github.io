@@ -246,7 +246,7 @@ b {
 }
 
 h1 {
-    color: var(--text-color);
+    color: var(--strong-color);
     font-size: 39px;
     font-weight: 700;
 }

@@ -7,6 +7,51 @@
     <copyright>2022 Bruno Rocha</copyright>
     <link>https://rockbruno.com</link>
     <atom:link href="https://rockbruno.com/rss.xml" rel="self" type="application/rss+xml"/><item>
+    <title>Focus on concepts, not approaches</title>
+    <link>https://rockbruno.com/focus-on-concepts-not-approaches</link>
+    <guid>https://rockbruno.com/focus-on-concepts-not-approaches</guid>
+    <pubDate>Thu, 6 Jan 2022 09:00:00 GMT-3</pubDate>
+<description><![CDATA[
+<!--WRITEIT_POST_NAME=Focus on concepts, not approaches-->
+<!--WRITEIT_POST_HTML_NAME=focus-on-concepts-not-approaches-->
+
+<!--Add here the additional properties that you want each page to possess.-->
+<!--These properties can be used to change content in the template page or in the page itself as shown here.-->
+<!--Properties must start with 'WRITEIT_POST'.-->
+<!--Writeit provides and injects WRITEIT_POST_NAME and WRITEIT_POST_HTML_NAME by default.-->
+
+<!--WRITEIT_POST_SHORT_DESCRIPTION=As long as there has been software concepts, there has been evangelism around them. More common for widely-known concepts like Clean Code and TDD, evangelists are developers who preach for the adoption of a specific pattern or platform, often with the intention of it being seen and used as some global solution that can be applied in all circunstances.-->
+
+<!--DateFormat example: 2022-01-06T14:00:00+02:00-->
+<!--WRITEIT_POST_SITEMAP_DATE_LAST_MOD=2022-01-06T14:00:00+02:00-->
+<!--WRITEIT_POST_SITEMAP_DATE=2022-01-06T14:00:00+02:00-->
+
+<title>Focus on concepts, not approaches</title>
+<div class="blog-post">
+  <div class="post-title-index">
+    <h1>Focus on concepts, not approaches</h1>
+  </div>  
+  <div class="post-info">
+    <div class="category category-software">Software Engineering</div>
+    <div class="post-info-text">Published on 06 Jan 2022</div>
+  </div>
+<p>As long as there has been software concepts, there has been evangelism around them. More common for widely-known concepts like Clean Code and TDD, evangelists are developers who preach for the adoption of a specific pattern or platform, often with the intention of it being seen and used as some global solution that can be applied in all circumstances.</p>
+<p>As an iOS developer, I remember vividly when a then-new architecture, VIPER, started being evangelized by a group of developers. Building a rocket? VIPER. Building a calculator? VIPER. Hey there! I'm gonna make some quick prototype for my startup, what wou---- Shush, go with VIPER!</p>
+<p><i>...But do I really need to write a convoluted system of classes for a single screen prototype that I could do in MVC in a couple of minutes?</i> Of course, because the book says this is the ultimate mobile architecture! Why wouldn't you do it when it's written like that?</p>
+<p>It's important to always be aware that every software is different, and that there is no catch-all solution that works for all of them. Every project will be done a different way, and most importantly, every developer will <i>reach</i> that goal in a different way. I see a lot of evangelism about how developers should approach a particular problem (see TDD) to the point where they even add interview questions to see if the candidates are familiar with their evangelized approach, which is something I completely disagree with. Books will usually detail a verbose system of names and steps like <i>carmackian flaming football principle</i> to show you how the author personally approaches a particular objective, but that doesn't mean that <i>you</i> also have to do that. As long as you reach the goal, the way you do it is completely up to you. When learning new concepts, make sure to come up with ways to apply them in a way that feels comfortable and right for you, while also adapting it to the needs of the project you're working on.</p>
+<p>Taking things too literally, especially from 200+ page books that could easily be written as a single page article, is something you should probably never do. Book authors don't know what you're working with, so they'll always detail their line of thought in a generic and verbose way that fits the most types of projects possible. Instead of focusing on the literal example the author has chosen to achieve some goal, think more in terms of what that example wants to convey.</p>
+<p>For example, when some people ask me if I "use" TDD, they often mean to ask if I strictly follow the author's complex system of terms and steps to reach the goal of a nicely developed component. But for me, TDD simply means building things by thinking first about what its tests would look like. I have no idea what the author's steps to do this are or what names it gives to them because I instead adapted what the author wanted to convey into something that feels comfortable to me and fits the reality of what I'm working on. The author's personal way of approaching the issue was just a tool for me to understand the concept and create my own approach.</p>
+<p>Interestingly enough, the pattern of evangelizing new technologies as some sort of bible of immutable truth perfectly fits the <b>Dreyfus Model of Skill Acquisition</b>:</p>
+<div class="post-image">
+  <img src="https://i.imgur.com/ytcqMVo.png" alt="Alt">                                    
+</div>
+<div class="sponsor-article-ad-auto hidden"></div>
+<p>The model details that beginners have a much harder time judging what they're reading, which leads them to require a much stricter set of rules in order to learn something new. On the other hand, the more knowledgeable you are, the more you're able to ignore these rules and acquire new information in a way that is much more intuitive and personal to you.</p>
+<p>But in the case of software concepts, I believe that you don't need to be an expert in the field to be able to exercise this ability. It feels to me that this is more of a matter of having the right mindset than the right skill set, and an "expert" in the model would just mean how familiar you're with exercising this mindset. As mentioned before, always keep in mind that every project is different, and the way to achieve a particular goal should always be something that is personal, comfortable to you, and adapted to the reality of your project.</p>
+</div>
+]]></description>
+</item>
+<item>
     <title>How To Solve Any Crash</title>
     <link>https://rockbruno.com/how-to-solve-any-crash</link>
     <guid>https://rockbruno.com/how-to-solve-any-crash</guid>

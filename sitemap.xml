@@ -5,6 +5,16 @@
       xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
             http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
 <url>
+    <loc>https://rockbruno.com/focus-on-concepts-not-approaches</loc>
+    <lastmod>2022-01-06T14:00:00+02:00</lastmod>
+    <priority>0.80</priority>
+</url>
+<url>
+    <loc>https://rockbruno.com/focus-on-concepts-not-approaches.html</loc>
+    <lastmod>2022-01-06T14:00:00+02:00</lastmod>
+    <priority>0.80</priority>
+</url>
+<url>
     <loc>https://rockbruno.com/talks</loc>
     <lastmod>2022-01-03T14:00:00+02:00</lastmod>
     <priority>0.80</priority>

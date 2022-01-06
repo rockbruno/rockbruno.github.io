@@ -39,11 +39,12 @@ body {
     font-size: 70px;
     font-weight: 600;
     margin: 0;
+    line-height: 60px;
 }
 
 .header p {
     color: var(--text-color);
-    margin-top: -8px;
+    margin-top: 4px;
 }
 
 .separator {
@@ -157,6 +158,9 @@ b {
     .blog-header-button a {
       padding-left: 6px;
       padding-right: 6px;
+    }
+    .post-info {
+      flex-direction: column;
     }
 }
 

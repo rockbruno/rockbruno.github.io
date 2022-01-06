@@ -35,7 +35,7 @@ body {
 }
 
 .header h1 {
-    color: var(--bold-color);
+    color: var(--strong-color);
     font-size: 70px;
     font-weight: 600;
     margin: 0;
@@ -161,10 +161,9 @@ b {
 }
 
 .post-title-index a {
-    color: var(--link-color);
+    color: var(--strong-color);
     font-size: 39px;
     font-weight: 700;
-    text-decoration: none;
 }
 
 .post-title-index h1 {
@@ -243,7 +242,7 @@ b {
 }
 
 h1 {
-    color: var(--bold-color);
+    color: var(--text-color);
     font-size: 39px;
     font-weight: 700;
 }

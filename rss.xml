@@ -7,6 +7,87 @@
     <copyright>2022 Bruno Rocha</copyright>
     <link>https://rockbruno.com</link>
     <atom:link href="https://rockbruno.com/rss.xml" rel="self" type="application/rss+xml"/><item>
+    <title>Using a Macbook Pro as a gaming console</title>
+    <link>https://rockbruno.com/using-a-macbook-pro-as-a-gaming-console</link>
+    <guid>https://rockbruno.com/using-a-macbook-pro-as-a-gaming-console</guid>
+    <pubDate>Wed, 6 Apr 2022 14:00:00 GMT+2</pubDate>
+<description><![CDATA[
+<!--WRITEIT_POST_NAME=Using a Macbook Pro as a gaming console-->
+<!--WRITEIT_POST_HTML_NAME=using-a-macbook-pro-as-a-gaming-console-->
+
+<!--Add here the additional properties that you want each page to possess.-->
+<!--These properties can be used to change content in the template page or in the page itself as shown here.-->
+<!--Properties must start with 'WRITEIT_POST'.-->
+<!--Writeit provides and injects WRITEIT_POST_NAME and WRITEIT_POST_HTML_NAME by default.-->
+
+<!--WRITEIT_POST_SHORT_DESCRIPTION=I had to leave my gaming computer behind when I moved to another country and have ever since felt an empty spot in my life. Can I transform a Macbook Pro into a sofa-gaming machine?-->
+
+<!--DateFormat example: 2022-04-06T14:00:00+02:00-->
+<!--WRITEIT_POST_SITEMAP_DATE_LAST_MOD=2022-04-06T14:00:00+02:00-->
+<!--WRITEIT_POST_SITEMAP_DATE=2022-04-06T14:00:00+02:00-->
+
+<title>Using a Macbook Pro as a gaming console</title>
+<div class="blog-post">
+  <div class="post-title-index">
+    <h1>Using a Macbook Pro as a gaming console</h1>
+  </div>  
+  <div class="post-info">
+    <div class="category category-electronics">Random</div>
+    <div class="post-info-text">Published on 06 Apr 2021</div>
+  </div>
+<p>I had to leave my gaming computer behind when I moved to another country and have ever since felt an empty spot in my life. I watched many interesting games get released as the years went by, but I didn't feel it was enough justification to buy a gigantic gaming desktop again as I don't have enough space (or will) to have a dedicated space for one.</p>
+<div class="sponsor-article-ad-auto hidden"></div>
+<p>The release of the Steam Deck got me really excited as it effectively solved the space problem, but it will still take several months until I can get my hands on mine. I then wondered: While my deck doesn't arrive, <b>could I somehow use my work Macbook to emulate the console gaming experience?</b></p>
+<p>It's not hard to install Windows on a Macbook as this is a built-in feature of macOS, but this is not entirely what I was looking for. I wanted to play PC games on the comfort of my sofa, <b>without removing the Macbook from my office.</b> TL;DR: It worked, and really well!</p>
+<h2>Step 1: Install Windows</h2>
+<p>As mentioned before, there's nothing special about installing a Windows partition on a Macbook. The Bootcamp Assistant software is built-in in macOS, and all you need to do is provide a Windows iso file (which you can download for free from Microsoft). You can then boot into Windows by holding the Option key during startup:</p>
+<div class="post-image">
+  <img src="https://i.imgur.com/Ka2xWlV.jpg" alt="Alt">                                    
+</div>
+<p>While Steam does work for macOS, the huge majority of games don't, so it's easier to just install Windows and run things as originally intended. This already lets me play whatever I want, but we're not done yet.</p>
+<h2>Step 2: Streaming to the TV with Steam Link</h2>
+<p>The Steam Link is one of these weird pieces of technology that are incredibly useful, yet for some reason pretty unknown. The link was released originally as a hardware in 2015 that allowed you to <b>stream</b> whatever you're using Steam for, but it was repurposed as a mobile/smart TV app around 2018.</p>
+<p>Luckily for me, my Samsung TV has the Steam Link app on its store. It's pretty straight-forward: once you turn on Steam on your computer and open the app on your TV, the computer will be detected by the app and you'll be able to stream right away!</p>
+<div class="post-image">
+  <img src="https://i.imgur.com/lq9Rl8j.png" alt="Alt">                                    
+</div>
+<h2>Step 3: Enjoy! ...sort of</h2>
+<p>Streaming through WiFi definitely works, but well, it sucks. Even though I have pretty good internet the input lag is <b>massive</b>, and the image is full of artifacts (not visible in this picture, but think of how YouTube videos appear to "glitch" when your connection is unstable)</p>
+<div class="post-image">
+  <img src="https://i.imgur.com/LrWto0N.png" alt="Alt">                                    
+</div>
+<p>I was already meaning to "upgrade" my Macbook to use a wired connection, so I thought this could be an interesting motivator to go forward with it!</p>
+<h2>Step 4: Start passing wires through the apartment</h2>
+<p>I'm lucky that half of the work was already done for me. My apartment had a ~10m RJ45 cable coming from the door into the living room, but I needed to re-route it so I could get it closer to the TV and the room in which the Macbook stays. The first thing I did was move the router to behind the TV, and then move a bunch of cable tunnels around to move the cable towards it:</p>
+<div class="post-image">
+  <img src="https://i.imgur.com/iGSkYpq.png" alt="Alt">                                    
+</div>
+<p>With the cable reaching the router, I could then use the router's outputs to wire the Macbook and the TV itself. Wiring the TV was straight-forward since the router is placed behind the TV, so all I needed to do now was pass a cable to the Macbook's room, which lied directly behind the TV's wall.</p>
+<p>As mentioned before, I got pretty lucky with this project. It seems that the previous owner tried to do something similar in the past, because the wall already had a perfectly-sized hole drilled into it! I then used a super long RJ45 cable I had laying around to connect the router through the hole and into a USB-C hub in my desk that is connected to the Macbook itself.</p>
+<div class="post-image">
+  <img src="https://i.imgur.com/NfljPAX.png" alt="Alt">                                    
+</div>
+<h2>Step 5: Enjoy! (for real!)</h2>
+<p>The result was beyond my expectations. Both the input-lag and the artifacts were <b>completely</b> gone!</p>
+<p>I was also pleasantly surprised with how easy it was to use a controller with this setup. I'm not sure if the praise should go to Valve or Samsung, but plugging a Xbox 360 controller to the TV was all I needed to do for Steam to completely recognize it and let me play with it!</p>
+<div class="post-image">
+  <img src="https://i.imgur.com/jEgTLZj.png" alt="Alt">                                    
+</div>
+<p>In terms of performance, I can say that this 2019 Macbook Pro is well equipped for the task. These are the games I played and I had no issues with any of them: Elden Ring, Team Fortress 2, Devil May Cry 5, Hades and Dota 2.</p>
+<p>The only downside I experienced is that the image is not as crisp as it would be if you were playing directly on your computer. It's definitely noticeable if you compare them, but to be honest, after a couple of minutes playing it I sort of "filtered" it inside my brain and stopped noticing it, so it wasn't bad at all. It's hard to tell the exact difference in these pictures because of the room's lighting, but I think you should be able to tell that the colors on the TV are a bit more "washed out" than the PC one:</p>
+<div class="post-image">
+  <img src="https://i.imgur.com/4q6GItk.png" alt="Alt">                                    
+</div>
+<div class="post-image">
+  <img src="https://i.imgur.com/EmDmcLS.png" alt="Alt">                                    
+</div>
+<p>In general, <b>the only true problems I experienced were with Windows itself.</b> God, I can't stress enough how awful this OS is. To be honest, I'm not entirely sure if Bootcamp played a role in the issues I experienced, but it didn't feel like it. The issues I experienced is that if <i>anything</i> is out of place in this mess of an OS, the entire system will freak out. The biggest issue I had is that after playing flawlessly for a couple of days, I got a random BSOD in Elden Ring that <b>completely</b> destroyed the video card drivers in a way that no amount of reinstalling or nuking files managed to fix. I was rendered unable to do anything that involved the GPU without getting massive stuttering and FPS drops, and the only fix that worked was to format Windows.</p>
+<div class="sponsor-article-ad-auto hidden"></div>
+<p>I did get other BSODs after this, but luckily none that completely destroyed the system again. I was then able to finish Elden Ring and feel satisfied with how this project turned out, and am now patiently waiting for my Steam Deck.</p>
+</div>
+]]></description>
+</item>
+<item>
     <title>Focus on concepts, not approaches</title>
     <link>https://rockbruno.com/focus-on-concepts-not-approaches</link>
     <guid>https://rockbruno.com/focus-on-concepts-not-approaches</guid>
